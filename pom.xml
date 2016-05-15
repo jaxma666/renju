@@ -8,6 +8,7 @@
     <artifactId>Renju</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <modules>
         <module>renju-web</module>
         <module>renju-service</module>
