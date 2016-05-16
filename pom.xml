@@ -26,6 +26,13 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.toys</groupId>
+                <artifactId>renju-service</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+
+
             <!-- spring -->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -130,7 +137,7 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>gwadmin</finalName>
+                    <finalName>Renju</finalName>
                     <descriptors>
                         <descriptor>assembly.xml</descriptor>
                         <!-- <descriptor>assembly-mapreduce.xml</descriptor> -->
