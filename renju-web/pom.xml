@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>renju-web</artifactId>
+
     <dependencies>
         <dependency>
             <groupId>toys</groupId>
