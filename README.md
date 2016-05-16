@@ -1,2 +1,2 @@
-# Renju
-a Renju platform
+# renju
+a renju platform
