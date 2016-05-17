@@ -1,13 +1,15 @@
 package com.toys.renju.web;
 
 import com.toys.renju.service.IUserSessionCenter;
-import com.toys.renju.service.messageHand.MessageHandlerFactory;
+import com.toys.renju.service.message.MessageHandlerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lingyao on 16/5/16.
@@ -23,7 +25,9 @@ public class RenjuController {
     MessageHandlerFactory messageHandlerFactory;
 
     @OnOpen
-    public void onOpen(Session session, String userName) {
+    public void onOpen(Session session) {
+        Map<String, List<String>> params = session.getRequestParameterMap();
+        String userName = params.get("userName").get(0);
         userSessionCenter.onLine(session, userName);
     }
 

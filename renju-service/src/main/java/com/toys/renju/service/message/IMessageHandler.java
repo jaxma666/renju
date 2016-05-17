@@ -1,4 +1,4 @@
-package com.toys.renju.service.messageHand;
+package com.toys.renju.service.message;
 
 import javax.websocket.Session;
 

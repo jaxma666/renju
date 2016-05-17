@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.websocket.Session;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by lingyao on 16/5/16.
