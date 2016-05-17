@@ -66,6 +66,7 @@ public class RenjuCenterImpl implements IRenjuCenter {
         for (Session each : visitorList) {
             sendMessage(each, "游戏结束了!");
         }
+        renjuGameList.remove(renjuGame);
     }
 
     @Override
