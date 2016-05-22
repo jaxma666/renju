@@ -1,14 +1,15 @@
 package com.toys.renju.service;
 
-import javax.websocket.Session;
+
+import org.springframework.web.socket.WebSocketSession;
 
 /**
  * Created by lingyao on 16/5/16.
  */
 public interface IUserSessionCenter {
-    public void onLine(Session session, String userName);
+    public void onLine(WebSocketSession session, String userName);
 
-    public void offLine(Session session);
+    public void offLine(WebSocketSession session);
 
     public Integer getUserCout();
 }

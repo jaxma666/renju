@@ -1,9 +1,7 @@
 package com.toys.renju.service.message;
 
 import org.springframework.stereotype.Service;
-
-import javax.websocket.Session;
-import java.io.IOException;
+import org.springframework.web.socket.WebSocketSession;
 
 /**
  * Created by lingyao on 16/5/17.
@@ -11,11 +9,11 @@ import java.io.IOException;
 @Service("defaultMessageHandler")
 public class DefaultMessageHandler implements IMessageHandler {
     @Override
-    public void handle(Session session) {
-        try {
-            session.getBasicRemote().sendText("hehe");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void handle(WebSocketSession session) {
+//        try {
+//            session.getBasicRemote().sendText("hehe");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }

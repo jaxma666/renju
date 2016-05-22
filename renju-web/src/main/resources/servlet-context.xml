@@ -48,7 +48,12 @@
     <!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources/
        directory -->
 
+    <mvc:view-controller path="/" view-name="redirect:/index.htm" />
+
+
     <mvc:resources mapping="/" location="/index.htm"/>
+    <mvc:resources mapping="/*.html" location="/"/>
+    <mvc:resources mapping="/*.htm" location="/"/>
     <mvc:resources mapping="/assets/**" location="/assets/"/>
     <mvc:resources mapping="/css/**" location="/assets/css/"/>
     <mvc:resources mapping="/js/**" location="/assets/js/"/>

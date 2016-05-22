@@ -1,9 +1,9 @@
 package com.toys.renju.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.PostConstruct;
-import javax.websocket.Session;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class UserSessionCenterImpl implements IUserSessionCenter {
 
-    ConcurrentHashMap<Session, String> userMap;
+    ConcurrentHashMap<WebSocketSession, String> userMap;
 
     @PostConstruct
     void init() {
@@ -20,12 +20,12 @@ public class UserSessionCenterImpl implements IUserSessionCenter {
     }
 
     @Override
-    public void onLine(Session session, String userName) {
+    public void onLine(WebSocketSession session, String userName) {
         userMap.put(session, userName);
     }
 
     @Override
-    public void offLine(Session session) {
+    public void offLine(WebSocketSession session) {
         userMap.remove(session);
     }
 
