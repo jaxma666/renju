@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>hello world</title>
+    <script type="text/javascript" src="/js/sockjs.js"></script>
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
 </head>
 <body>
 
@@ -10,4 +12,14 @@
 
 
 </body>
+<script>
+    jQuery(document).ready(function () {
+        var sock = new SockJS("http://localhost:8080/renju");
+
+        sock.onmessage = function (e) {
+            console.log(e.data);
+        }
+    });
+
+</script>
 </html>

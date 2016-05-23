@@ -1,37 +1,38 @@
 package com.toys.renju.service.domain;
 
-import javax.websocket.Session;
+import org.springframework.web.socket.WebSocketSession;
+
 import java.util.List;
 
 /**
  * Created by lingyao on 16/5/18.
  */
 public class Participants {
-    Session creator;
-    Session joiner;
-    List<Session> visitor;
+    WebSocketSession creator;
+    WebSocketSession joiner;
+    List<WebSocketSession> visitor;
 
-    public List<Session> getVisitor() {
+    public List<WebSocketSession> getVisitor() {
         return visitor;
     }
 
-    public void setVisitor(List<Session> visitor) {
+    public void setVisitor(List<WebSocketSession> visitor) {
         this.visitor = visitor;
     }
 
-    public Session getCreator() {
+    public WebSocketSession getCreator() {
         return creator;
     }
 
-    public void setCreator(Session creator) {
+    public void setCreator(WebSocketSession creator) {
         this.creator = creator;
     }
 
-    public Session getJoiner() {
+    public WebSocketSession getJoiner() {
         return joiner;
     }
 
-    public void setJoiner(Session joiner) {
+    public void setJoiner(WebSocketSession joiner) {
         this.joiner = joiner;
     }
 }
