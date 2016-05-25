@@ -19,12 +19,12 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(renjuHandler(), "/renju")
-                .withSockJS();
+        registry.addHandler(renjuHandler(), "/renju");
     }
 
     @Bean
     public WebSocketHandler renjuHandler() {
         return new RenjuHandler();
     }
+
 }

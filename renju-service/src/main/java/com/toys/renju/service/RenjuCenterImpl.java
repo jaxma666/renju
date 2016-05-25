@@ -2,11 +2,11 @@ package com.toys.renju.service;
 
 import com.toys.renju.service.domain.Participants;
 import com.toys.renju.service.domain.RenjuGame;
-import com.toys.renju.service.util.MessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.WebSocketSession;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,8 @@ import java.util.List;
  */
 public class RenjuCenterImpl implements IRenjuCenter {
     private static final Logger logger = LoggerFactory.getLogger(RenjuCenterImpl.class);
-
+    @Resource
+    IPushCenter pushCenter;
 
     private List<RenjuGame> renjuGameList = new ArrayList<>();
 
@@ -40,7 +41,7 @@ public class RenjuCenterImpl implements IRenjuCenter {
             joiner.getAttributes().put(joiner.getId(), renjuGame);
             renjuGame.getParticipants().setJoiner(joiner);
         } else {
-            MessageUtil.sendMessage("加入游戏失败,请再选一个对手", joiner);
+            pushCenter.pushMessage("加入游戏失败,请再选一个对手", joiner);
         }
     }
 
@@ -61,11 +62,11 @@ public class RenjuCenterImpl implements IRenjuCenter {
     public void endGame(WebSocketSession oneUser) {
         RenjuGame renjuGame = (RenjuGame) oneUser.getAttributes().get(oneUser.getId());
         Participants participants = renjuGame.getParticipants();
-        MessageUtil.sendMessage("游戏结束了!", participants.getJoiner());
-        MessageUtil.sendMessage("游戏结束了!", participants.getCreator());
+        pushCenter.pushMessage("游戏结束了!", participants.getJoiner());
+        pushCenter.pushMessage("游戏结束了!", participants.getCreator());
         List<WebSocketSession> visitorList = participants.getVisitor();
         for (WebSocketSession each : visitorList) {
-            MessageUtil.sendMessage("游戏结束了!", each);
+            pushCenter.pushMessage("游戏结束了!", each);
         }
         renjuGameList.remove(renjuGame);
     }

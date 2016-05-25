@@ -14,6 +14,15 @@ public class UserSessionCenterImpl implements IUserSessionCenter {
 
     ConcurrentHashMap<WebSocketSession, String> userMap;
 
+    @Override
+    public ConcurrentHashMap<WebSocketSession, String> getUserMap() {
+        return this.userMap;
+    }
+
+    public void setUserMap(ConcurrentHashMap<WebSocketSession, String> userMap) {
+        this.userMap = userMap;
+    }
+
     @PostConstruct
     void init() {
         userMap = new ConcurrentHashMap<>();

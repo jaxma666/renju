@@ -124,6 +124,11 @@
             <artifactId>velocity-tools</artifactId>
         </dependency>
 
+        <!--test-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
     </dependencies>
 
 
