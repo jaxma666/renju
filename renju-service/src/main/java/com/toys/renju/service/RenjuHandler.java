@@ -1,6 +1,9 @@
 package com.toys.renju.service;
 
 import com.alibaba.fastjson.JSON;
+import com.toys.renju.service.code.ErrorCode;
+import com.toys.renju.service.domain.ActionResult;
+import com.toys.renju.service.message.IMessageHandler;
 import com.toys.renju.service.message.MessageHandlerFactory;
 import com.toys.renju.service.protocol.SimpleProtocol;
 import org.slf4j.Logger;
@@ -25,9 +28,12 @@ public class RenjuHandler extends TextWebSocketHandler {
     @Resource
     MessageHandlerFactory messageHandlerFactory;
 
+    @Resource
+    IPushCenter pushCenter;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        logger.error("新用户创建了连接{}", session);
+        logger.error("新用户创建了连接: ", session.getId());
         TextMessage message = new TextMessage("welcome to the renju world!");
         session.sendMessage(message);
     }
@@ -39,17 +45,20 @@ public class RenjuHandler extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
         SimpleProtocol simpleProtocol;
+        ActionResult<String> actionResult = new ActionResult<>();
         try {
-            simpleProtocol = parseMessage(message.toString());
+            simpleProtocol = parseMessage(message.getPayload());
         } catch (Exception e) {
             logger.error("解析协议失败: message:{}", message, e);
+            actionResult.setErrorCode(ErrorCode.ERROR_PROTOCOL_FORMAT);
+            pushCenter.pushMessage(actionResult, session);
             return;
         }
-        if (simpleProtocol == null) {
-            logger.error("解析协议失败: message:{}", message);
-            return;
+        IMessageHandler messageHandler = messageHandlerFactory.getMessageHandler(simpleProtocol.getAction());
+        if (messageHandler == null) {
+            messageHandler = messageHandlerFactory.getMessageHandler("default");
         }
-        messageHandlerFactory.getMessageHandler(simpleProtocol.getAction()).handle(session, simpleProtocol.getContent());
+        messageHandler.handle(session, simpleProtocol.getContent());
     }
 
     @Override
@@ -59,6 +68,6 @@ public class RenjuHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-
+        userSessionCenter.offLine(session);
     }
 }

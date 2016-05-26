@@ -4,8 +4,8 @@ package com.toys.renju.service.protocol;
  * Created by lingyao on 16/5/25.
  */
 public class SimpleProtocol {
-    String action;
-    String content;
+    private String action;
+    private String content;
 
     public String getContent() {
         return content;

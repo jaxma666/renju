@@ -19,7 +19,7 @@
     <bean id="messageHandlerFactory" class="com.toys.renju.service.message.MessageHandlerFactory">
         <property name="messageHandlerMap">
             <map>
-                <entry key="createUser" value-ref="createUserMessageHandler"/>
+                <entry key="create_user" value-ref="createUserMessageHandler"/>
                 <entry key="default" value-ref="defaultMessageHandler"/>
             </map>
         </property>

@@ -41,7 +41,7 @@ public class RenjuCenterImpl implements IRenjuCenter {
             joiner.getAttributes().put(joiner.getId(), renjuGame);
             renjuGame.getParticipants().setJoiner(joiner);
         } else {
-            pushCenter.pushMessage("加入游戏失败,请再选一个对手", joiner);
+//            pushCenter.pushMessage("加入游戏失败,请再选一个对手", joiner);
         }
     }
 
@@ -62,11 +62,11 @@ public class RenjuCenterImpl implements IRenjuCenter {
     public void endGame(WebSocketSession oneUser) {
         RenjuGame renjuGame = (RenjuGame) oneUser.getAttributes().get(oneUser.getId());
         Participants participants = renjuGame.getParticipants();
-        pushCenter.pushMessage("游戏结束了!", participants.getJoiner());
-        pushCenter.pushMessage("游戏结束了!", participants.getCreator());
+//        pushCenter.pushMessage("游戏结束了!", participants.getJoiner());
+//        pushCenter.pushMessage("游戏结束了!", participants.getCreator());
         List<WebSocketSession> visitorList = participants.getVisitor();
         for (WebSocketSession each : visitorList) {
-            pushCenter.pushMessage("游戏结束了!", each);
+//            pushCenter.pushMessage("游戏结束了!", each);
         }
         renjuGameList.remove(renjuGame);
     }

@@ -1,0 +1,35 @@
+package com.toys.renju.service.code;
+
+/**
+ * Created by lingyao on 16/5/26.
+ */
+public enum ErrorCode {
+
+    ERROR_PROTOCOL_FORMAT(101, "protocol format error"),
+    INVILAD_PROTOCOL(102, "protocol error");
+    private int code;
+    private String defaultMsg;
+
+
+    ErrorCode(int code, String defaultMsg) {
+        this.code = code;
+        this.defaultMsg = defaultMsg;
+    }
+
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getDefaultMsg() {
+        return defaultMsg;
+    }
+
+    public void setDefaultMsg(String defaultMsg) {
+        this.defaultMsg = defaultMsg;
+    }
+}

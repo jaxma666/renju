@@ -25,7 +25,7 @@ public class RenjuConsoleController {
     @ResponseBody
     public String boradcast() {
         for (Map.Entry<WebSocketSession, String> entry : userSessionCenter.getUserMap().entrySet()) {
-            pushCenter.pushMessage("hi", entry.getKey());
+//            pushCenter.pushMessage("hi", entry.getKey());
         }
         return "done";
     }

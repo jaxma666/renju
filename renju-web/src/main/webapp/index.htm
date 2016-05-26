@@ -7,7 +7,10 @@
 </head>
 <body>
 
-你好世界!
+<div>
+    <input id="shurukuang" type="text" value="" placeholder="json格式"/>
+    <button id="hehe">send message to server</button>
+</div>
 
 
 </body>
@@ -15,13 +18,18 @@
     jQuery(document).ready(function () {
         var connection = new WebSocket("ws://localhost:8080/renju");
 
+
+        jQuery("#hehe").click(function () {
+            connection.send(jQuery("#shurukuang").val());
+        });
+
         connection.onopen = function () {
-            connection.send(''); // Send the message 'Ping' to the server
+            connection.send("{\"action\":\"create_user\",\"content\":\"lingyao\"}");
         };
 
 // Log errors
         connection.onerror = function (error) {
-            console.log('WebSocket Error ' + error);
+            alert('WebSocket Error' + error);
         };
 
 // Log messages from the server
