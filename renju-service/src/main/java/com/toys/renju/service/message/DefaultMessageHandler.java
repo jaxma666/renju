@@ -8,12 +8,9 @@ import org.springframework.web.socket.WebSocketSession;
  */
 @Service("defaultMessageHandler")
 public class DefaultMessageHandler implements IMessageHandler {
+
     @Override
-    public void handle(WebSocketSession session) {
-//        try {
-//            session.getBasicRemote().sendText("hehe");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+    public void handle(WebSocketSession session, Object content) {
+
     }
 }

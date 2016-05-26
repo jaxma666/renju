@@ -1,5 +1,8 @@
 package com.toys.renju.service;
 
+import com.alibaba.fastjson.JSON;
+import com.toys.renju.service.message.MessageHandlerFactory;
+import com.toys.renju.service.protocol.SimpleProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
@@ -8,7 +11,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 
 /**
  * Created by lingyao on 16/5/21.
@@ -20,30 +22,43 @@ public class RenjuHandler extends TextWebSocketHandler {
     @Resource
     IUserSessionCenter userSessionCenter;
 
+    @Resource
+    MessageHandlerFactory messageHandlerFactory;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        userSessionCenter.onLine(session, "hehe");
-        TextMessage message = new TextMessage("欢迎");
-        logger.error(session.getId());
-        session.getAttributes();
+        logger.error("新用户创建了连接{}", session);
+        TextMessage message = new TextMessage("welcome to the renju world!");
         session.sendMessage(message);
+    }
+
+    private SimpleProtocol parseMessage(String message) throws Exception {
+        return JSON.parseObject(message, SimpleProtocol.class);
     }
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
-        TextMessage msg = new TextMessage("Hello, " + message.getPayload() + "!");
+        SimpleProtocol simpleProtocol;
         try {
-            session.sendMessage(msg);
-        } catch (IOException e) {
-            e.printStackTrace();
+            simpleProtocol = parseMessage(message.toString());
+        } catch (Exception e) {
+            logger.error("解析协议失败: message:{}", message, e);
+            return;
         }
+        if (simpleProtocol == null) {
+            logger.error("解析协议失败: message:{}", message);
+            return;
+        }
+        messageHandlerFactory.getMessageHandler(simpleProtocol.getAction()).handle(session, simpleProtocol.getContent());
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+        logger.error(exception.getMessage(), exception);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+
     }
 }

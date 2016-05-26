@@ -7,5 +7,5 @@ import org.springframework.web.socket.WebSocketSession;
  * Created by lingyao on 16/5/17.
  */
 public interface IMessageHandler {
-    void handle(WebSocketSession session);
+    void handle(WebSocketSession session, Object content);
 }

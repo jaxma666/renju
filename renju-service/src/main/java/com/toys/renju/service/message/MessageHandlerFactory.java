@@ -1,11 +1,16 @@
 package com.toys.renju.service.message;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 
 /**
  * Created by lingyao on 16/5/17.
  */
 public class MessageHandlerFactory {
+    private static final Logger logger = LoggerFactory.getLogger(MessageHandlerFactory.class);
+
     private Map<String, IMessageHandler> messageHandlerMap;
 
     public Map<String, IMessageHandler> getMessageHandlerMap() {
@@ -16,11 +21,7 @@ public class MessageHandlerFactory {
         this.messageHandlerMap = messageHandlerMap;
     }
 
-    public IMessageHandler getMessageHandler(String message) {
-        if (message == null || messageHandlerMap == null) {
-            return null;
-        } else {
-            return messageHandlerMap.get(message);
-        }
+    public IMessageHandler getMessageHandler(String type) {
+        return messageHandlerMap.get(type);
     }
 }
