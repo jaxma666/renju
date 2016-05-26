@@ -21,6 +21,9 @@
             <map>
                 <entry key="create_user" value-ref="createUserMessageHandler"/>
                 <entry key="default" value-ref="defaultMessageHandler"/>
+                <entry key="create_game" value-ref="createGameMessageHandler"/>
+                <entry key="join_game" value-ref="joinGameMessageHandler"/>
+                <entry key="watch_game" value-ref="watchGameMessageHandler"/>
             </map>
         </property>
     </bean>
