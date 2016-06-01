@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class UserSessionCenterImpl implements IUserSessionCenter {
 
-    ConcurrentHashMap<WebSocketSession, String> userMap;
+    private ConcurrentHashMap<WebSocketSession, String> userMap;
 
     @Override
     public ConcurrentHashMap<WebSocketSession, String> getUserMap() {

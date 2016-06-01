@@ -124,23 +124,6 @@
                 <version>2.3</version>
             </dependency>
 
-            <!--responseBody转json-->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>2.7.0-rc2</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>2.7.0-rc2</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>2.7.0-rc2</version>
-            </dependency>
-
             <!-- ================================================= -->
             <!-- 日志及相关依赖（用slf4j+logback代替jcl+log4j） -->
             <!-- ================================================= -->

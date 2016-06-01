@@ -63,6 +63,4 @@ public class ActionResult<T> {
         success = true;
         this.result = result;
     }
-
-
 }

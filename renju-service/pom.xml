@@ -64,7 +64,7 @@
         <!--test-->
         <dependency>
             <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <artifawctId>junit</artifawctId>
         </dependency>
 
     </dependencies>

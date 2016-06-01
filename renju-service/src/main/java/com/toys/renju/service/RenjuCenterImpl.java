@@ -4,21 +4,24 @@ import com.toys.renju.service.domain.Participants;
 import com.toys.renju.service.domain.RenjuGame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by lingyao on 16/5/17.
  */
+@Service
 public class RenjuCenterImpl implements IRenjuCenter {
     private static final Logger logger = LoggerFactory.getLogger(RenjuCenterImpl.class);
     @Resource
     IPushCenter pushCenter;
 
-    private List<RenjuGame> renjuGameList = new ArrayList<>();
+    private List<RenjuGame> renjuGameList = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     public List<RenjuGame> getGameList() {
@@ -29,24 +32,25 @@ public class RenjuCenterImpl implements IRenjuCenter {
     public void createGame(WebSocketSession creator) {
         RenjuGame renjuGame = new RenjuGame();
         renjuGame.getParticipants().setCreator(creator);
-
         creator.getAttributes().put(creator.getId(), renjuGame);
         renjuGameList.add(renjuGame);
     }
 
     @Override
-    public void joinGame(WebSocketSession creator, WebSocketSession joiner) {
-        RenjuGame renjuGame = (RenjuGame) creator.getAttributes().get(creator.getId());
+    public Boolean joinGame(WebSocketSession joiner, Integer gameId) {
+        RenjuGame renjuGame = renjuGameList.get(gameId);
         if (renjuGame.gameState.compareAndSet(0, 1)) {
             joiner.getAttributes().put(joiner.getId(), renjuGame);
             renjuGame.getParticipants().setJoiner(joiner);
-        } else {
-//            pushCenter.pushMessage("加入游戏失败,请再选一个对手", joiner);
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void watchGame(WebSocketSession visitor, RenjuGame renjuGame) {
+    public Boolean watchGame(WebSocketSession visitor, Integer gameId) {
+        RenjuGame renjuGame = renjuGameList.get(gameId);
+        if (renjuGame == null) return false;
         if (renjuGame.visitorInit.compareAndSet(0, 1)) {
             List<WebSocketSession> visitorList = new ArrayList<>();
             visitorList.add(visitor);
@@ -56,6 +60,7 @@ public class RenjuCenterImpl implements IRenjuCenter {
             visitorList.add(visitor);
             renjuGame.getParticipants().setVisitor(visitorList);
         }
+        return true;
     }
 
     @Override

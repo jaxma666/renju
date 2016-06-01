@@ -10,13 +10,16 @@ import java.util.List;
  * Created by lingyao on 16/5/17.
  */
 public interface IRenjuCenter {
+    //全局的棋局信息
     public List<RenjuGame> getGameList();
 
+    //创建一局棋,并把session关联到棋局id
     public void createGame(WebSocketSession creator);
 
-    public void joinGame(WebSocketSession creator, WebSocketSession joiner);
+    //加入一个棋局,把session关联到棋局id
+    public Boolean joinGame(WebSocketSession joiner, Integer gameId);
 
-    public void watchGame(WebSocketSession visitor, RenjuGame renjuGame);
+    public Boolean watchGame(WebSocketSession visitor, Integer gameId);
 
     public void endGame(WebSocketSession oneUser);
 

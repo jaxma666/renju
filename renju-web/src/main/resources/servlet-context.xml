@@ -7,27 +7,15 @@
 
     <!-- 开启Srping MVC的注解驱动特性 -->
     <mvc:annotation-driven>
-        <!-- 解决 @ResponseBody 乱码问题 -->
         <mvc:message-converters>
-            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-                <constructor-arg value="UTF-8"/>
-                <property name="writeAcceptCharset" value="false"/>
-            </bean>
+            <!-- 解决 @ResponseBody 乱码问题 -->
+            <!--<bean class="org.springframework.http.converter.StringHttpMessageConverter">-->
+            <!--<constructor-arg value="UTF-8"/>-->
+            <!--<property name="writeAcceptCharset" value="false"/>-->
+            <!--</bean>-->
             <!--@ResponseBody返回值转为json-->
-            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                <property name="objectMapper">
-                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
-                        <property name="dateFormat">
-                            <bean class="java.text.SimpleDateFormat">
-                                <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss"/>
-                            </bean>
-                        </property>
-                        <property name="serializationInclusion">
-                            <!-- 注入枚举类型 -->
-                            <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
-                        </property>
-                    </bean>
-                </property>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/html;charset=UTF-8"/>
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
