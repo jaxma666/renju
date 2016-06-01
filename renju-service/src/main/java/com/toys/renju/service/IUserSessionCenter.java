@@ -1,6 +1,7 @@
 package com.toys.renju.service;
 
 
+import com.toys.renju.service.domain.UserDO;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +14,7 @@ public interface IUserSessionCenter {
 
     public void offLine(WebSocketSession session);
 
-    public ConcurrentHashMap<WebSocketSession, String> getUserMap();
+    public ConcurrentHashMap<String, UserDO> getUserMap();
 
     public Integer getUserCout();
 }

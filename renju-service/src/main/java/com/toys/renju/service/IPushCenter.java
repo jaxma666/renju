@@ -1,6 +1,7 @@
 package com.toys.renju.service;
 
 import com.toys.renju.service.domain.ActionResult;
+import com.toys.renju.service.domain.Participants;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
@@ -8,6 +9,9 @@ import org.springframework.web.socket.WebSocketSession;
  */
 public interface IPushCenter {
     public void pushMessage(ActionResult actionResult, WebSocketSession... receiver);
+
+    public void pushToAllParticipants(ActionResult actionResult,Participants participants);
+
 }
 
 

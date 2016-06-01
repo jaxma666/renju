@@ -17,11 +17,11 @@ public interface IRenjuCenter {
     public void createGame(WebSocketSession creator);
 
     //加入一个棋局,把session关联到棋局id
-    public Boolean joinGame(WebSocketSession joiner, Integer gameId);
+    public Boolean joinGame(WebSocketSession joiner, RenjuGame renjuGame);
 
-    public Boolean watchGame(WebSocketSession visitor, Integer gameId);
+    public Boolean watchGame(WebSocketSession visitor, RenjuGame renjuGame);
 
-    public void endGame(WebSocketSession oneUser);
+    public void leftGame(WebSocketSession oneUser);
 
     public void doStep(WebSocketSession oneUser);
 

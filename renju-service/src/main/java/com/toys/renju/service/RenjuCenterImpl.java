@@ -37,8 +37,7 @@ public class RenjuCenterImpl implements IRenjuCenter {
     }
 
     @Override
-    public Boolean joinGame(WebSocketSession joiner, Integer gameId) {
-        RenjuGame renjuGame = renjuGameList.get(gameId);
+    public Boolean joinGame(WebSocketSession joiner, RenjuGame renjuGame) {
         if (renjuGame.gameState.compareAndSet(0, 1)) {
             joiner.getAttributes().put(joiner.getId(), renjuGame);
             renjuGame.getParticipants().setJoiner(joiner);
@@ -48,9 +47,7 @@ public class RenjuCenterImpl implements IRenjuCenter {
     }
 
     @Override
-    public Boolean watchGame(WebSocketSession visitor, Integer gameId) {
-        RenjuGame renjuGame = renjuGameList.get(gameId);
-        if (renjuGame == null) return false;
+    public Boolean watchGame(WebSocketSession visitor, RenjuGame renjuGame) {
         if (renjuGame.visitorInit.compareAndSet(0, 1)) {
             List<WebSocketSession> visitorList = new ArrayList<>();
             visitorList.add(visitor);
@@ -64,14 +61,14 @@ public class RenjuCenterImpl implements IRenjuCenter {
     }
 
     @Override
-    public void endGame(WebSocketSession oneUser) {
+    public void leftGame(WebSocketSession oneUser) {
         RenjuGame renjuGame = (RenjuGame) oneUser.getAttributes().get(oneUser.getId());
         Participants participants = renjuGame.getParticipants();
-//        pushCenter.pushMessage("游戏结束了!", participants.getJoiner());
-//        pushCenter.pushMessage("游戏结束了!", participants.getCreator());
+        participants.getCreator().getAttributes().clear();
+        participants.getJoiner().getAttributes().clear();
         List<WebSocketSession> visitorList = participants.getVisitor();
         for (WebSocketSession each : visitorList) {
-//            pushCenter.pushMessage("游戏结束了!", each);
+            each.getAttributes().clear();
         }
         renjuGameList.remove(renjuGame);
     }
@@ -80,5 +77,4 @@ public class RenjuCenterImpl implements IRenjuCenter {
     public void doStep(WebSocketSession oneUser) {
         //游戏业务逻辑
     }
-
 }

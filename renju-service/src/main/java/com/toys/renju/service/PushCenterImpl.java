@@ -2,6 +2,7 @@ package com.toys.renju.service;
 
 import com.alibaba.fastjson.JSON;
 import com.toys.renju.service.domain.ActionResult;
+import com.toys.renju.service.domain.Participants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,4 +29,17 @@ public class PushCenterImpl implements IPushCenter {
         }
     }
 
+    @Override
+    public void pushToAllParticipants(ActionResult actionResult, Participants participants) {
+        TextMessage textMessage = new TextMessage(JSON.toJSONString(actionResult));
+        try {
+            participants.getCreator().sendMessage(textMessage);
+            participants.getJoiner().sendMessage(textMessage);
+            for (WebSocketSession each : participants.getVisitor()) {
+                each.sendMessage(textMessage);
+            }
+        } catch (Exception e) {
+            logger.error("发消息异常:" + e.getMessage(), e);
+        }
+    }
 }

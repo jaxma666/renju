@@ -8,7 +8,8 @@ public enum ErrorCode {
     ERROR_PROTOCOL_FORMAT(101, "protocol format error"),
     INVILAD_PROTOCOL(102, "protocol error"),
     JOIN_GAME_FAILED(201, "join game failed"),
-    WATCH_GAME_FAILED(202,"watch game failed");
+    WATCH_GAME_FAILED(202, "watch game failed"),
+    LEFT_GAME_FAILED(203, "left game failed");
     private int code;
     private String defaultMsg;
 
