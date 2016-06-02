@@ -3,7 +3,6 @@ package com.toys.renju.service.message;
 import com.toys.renju.service.IPushCenter;
 import com.toys.renju.service.IUserSessionCenter;
 import com.toys.renju.service.domain.ActionResult;
-import com.toys.renju.service.protocol.SimpleProtocol;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 

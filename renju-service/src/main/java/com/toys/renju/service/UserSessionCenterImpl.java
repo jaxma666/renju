@@ -1,10 +1,11 @@
 package com.toys.renju.service;
 
-import com.toys.renju.service.domain.UserDO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -13,37 +14,35 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class UserSessionCenterImpl implements IUserSessionCenter {
 
-    private ConcurrentHashMap<String, UserDO> userMap;
+    private Set<WebSocketSession> userSessionSet;
 
     @Override
-    public ConcurrentHashMap<String, UserDO> getUserMap() {
-        return userMap;
+    public Set<WebSocketSession> getUserSessionSet() {
+        return userSessionSet;
     }
 
-    public void setUserMap(ConcurrentHashMap<String, UserDO> userMap) {
-        this.userMap = userMap;
+    public void setUserSessionSet(Set<WebSocketSession> userSessionSet) {
+        this.userSessionSet = userSessionSet;
     }
 
     @PostConstruct
     void init() {
-        userMap = new ConcurrentHashMap<>();
+        userSessionSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
     }
 
     @Override
     public void onLine(WebSocketSession session, String userName) {
-        UserDO userDO = new UserDO();
-        userDO.setUserName(userName);
-        userDO.setSocketSession(session);
-        userMap.put(session.getId(), userDO);
+        session.getAttributes().put("userName", userName);
+        userSessionSet.add(session);
     }
 
     @Override
     public void offLine(WebSocketSession session) {
-        userMap.remove(session.getId());
+        userSessionSet.remove(session);
     }
 
     @Override
     public Integer getUserCout() {
-        return userMap.size();
+        return userSessionSet.size();
     }
 }

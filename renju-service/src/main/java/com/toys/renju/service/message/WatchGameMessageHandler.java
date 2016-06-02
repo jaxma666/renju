@@ -29,7 +29,7 @@ public class WatchGameMessageHandler implements IMessageHandler {
         RenjuGame renjuGame = renjuGameList.get(Integer.valueOf(content));
         Boolean result = renjuCenter.watchGame(session, renjuGame);
         if (result) {
-            actionResult.setSuccessResult(session.getId() + "watch_game_success");
+            actionResult.setSuccessResult("watch_game_success"+session.getAttributes().get("userName"));
         } else {
             actionResult.setErrorCode(ErrorCode.WATCH_GAME_FAILED);
         }

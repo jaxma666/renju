@@ -21,7 +21,6 @@ import javax.annotation.Resource;
 public class RenjuHandler extends TextWebSocketHandler {
     private static final Logger logger = LoggerFactory.getLogger(RenjuHandler.class);
 
-
     @Resource
     IUserSessionCenter userSessionCenter;
 
@@ -33,7 +32,7 @@ public class RenjuHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        logger.error("新用户创建了连接: ", session.getId());
+        logger.error("新用户创建了连接: {}", session.getId());
         TextMessage message = new TextMessage("welcome to the renju world!");
         session.sendMessage(message);
     }
@@ -58,7 +57,11 @@ public class RenjuHandler extends TextWebSocketHandler {
         if (messageHandler == null) {
             messageHandler = messageHandlerFactory.getMessageHandler("default");
         }
-        messageHandler.handle(session, simpleProtocol.getContent());
+        try {
+            messageHandler.handle(session, simpleProtocol.getContent());
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     @Override
