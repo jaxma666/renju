@@ -61,6 +61,7 @@ public class RenjuHandler extends TextWebSocketHandler {
             messageHandler.handle(session, simpleProtocol.getContent());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+            //todo 这里要不要通知客户端呢?
         }
     }
 

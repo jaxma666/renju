@@ -1,5 +1,7 @@
 package com.toys.renju.service.domain;
 
+import com.alibaba.fastjson.JSON;
+
 /**
  * Created by lingyao on 16/5/15.
  */
@@ -25,6 +27,6 @@ public class Position {
 
     @Override
     public String toString() {
-        return "pos: x:" + row + " y:" + column;
+        return JSON.toJSONString(this);
     }
 }

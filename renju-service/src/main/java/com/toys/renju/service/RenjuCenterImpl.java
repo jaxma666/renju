@@ -1,5 +1,6 @@
 package com.toys.renju.service;
 
+import com.toys.renju.service.domain.Chessman;
 import com.toys.renju.service.domain.Participants;
 import com.toys.renju.service.domain.RenjuGame;
 import org.slf4j.Logger;
@@ -74,7 +75,8 @@ public class RenjuCenterImpl implements IRenjuCenter {
     }
 
     @Override
-    public void doStep(WebSocketSession oneUser) {
-        //游戏业务逻辑
+    public String doStep(RenjuGame renjuGame, Chessman chessman) {
+        return renjuGame.doNextStep(chessman);
     }
 }
+

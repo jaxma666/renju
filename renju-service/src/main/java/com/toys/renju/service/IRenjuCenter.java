@@ -1,5 +1,6 @@
 package com.toys.renju.service;
 
+import com.toys.renju.service.domain.Chessman;
 import com.toys.renju.service.domain.RenjuGame;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -23,6 +24,6 @@ public interface IRenjuCenter {
 
     public void leftGame(WebSocketSession oneUser);
 
-    public void doStep(WebSocketSession oneUser);
+    public String doStep(RenjuGame renjuGame, Chessman chessman);
 
 }

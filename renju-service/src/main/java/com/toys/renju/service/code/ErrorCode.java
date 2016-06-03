@@ -9,7 +9,9 @@ public enum ErrorCode {
     INVILAD_PROTOCOL(102, "protocol error"),
     JOIN_GAME_FAILED(201, "join game failed"),
     WATCH_GAME_FAILED(202, "watch game failed"),
-    LEFT_GAME_FAILED(203, "left game failed");
+    LEFT_GAME_FAILED(203, "left game failed"),
+    INVILAD_CHESSMAN_PROTOCOL(301, "chess man parse error"),
+    TURN_ERROR(302, "not your true");
     private int code;
     private String defaultMsg;
 
