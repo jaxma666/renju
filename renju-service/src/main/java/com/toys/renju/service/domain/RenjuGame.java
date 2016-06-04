@@ -49,7 +49,7 @@ public class RenjuGame {
     }
 
     private String checkAllDirection(Chessman chessman) {
-        Integer index = chessman.getPosition().getRow() + chessman.getPosition().getRow();
+        Integer index = chessman.getPosition().getRow() * boardSize + chessman.getPosition().getColumn();
         chessBoard.add(index, chessman);
         if (checkLeft(index, chessman)
                 || checkRight(index, chessman)
@@ -67,7 +67,7 @@ public class RenjuGame {
 
     private Boolean checkLeft(Integer index, Chessman chessman) {
         for (int i = 1; i < 5; i++) {
-            if (chessman.getPosition().getRow() - i < 0) return false;
+            if (chessman.getPosition().getColumn() - i < 0) return false;
             if (chessBoard.get(index - i) == null || !chessBoard.get(index - i).getColor().equals(chessman.getColor()))
                 return false;
         }
@@ -76,7 +76,7 @@ public class RenjuGame {
 
     private Boolean checkRight(Integer index, Chessman chessman) {
         for (int i = 1; i < 5; i++) {
-            if (chessman.getPosition().getRow() + i >= boardSize) return false;
+            if (chessman.getPosition().getColumn() + i >= boardSize) return false;
             if (chessBoard.get(index + i) == null || !chessBoard.get(index + i).getColor().equals(chessman.getColor()))
                 return false;
         }
@@ -85,7 +85,7 @@ public class RenjuGame {
 
     private Boolean checkUp(Integer index, Chessman chessman) {
         for (int i = 1; i < 5; i++) {
-            if (chessman.getPosition().getColumn() - i < 0) return false;
+            if (chessman.getPosition().getRow() - i < 0) return false;
             if (chessBoard.get(index - boardSize * i) == null || !chessBoard.get(index - boardSize * i).getColor().equals(chessman.getColor()))
                 return false;
         }
@@ -94,11 +94,11 @@ public class RenjuGame {
 
     private Boolean checkDown(Integer index, Chessman chessman) {
         for (int i = 1; i < 5; i++) {
-            if (chessman.getPosition().getColumn() + i >= boardSize) return false;
+            if (chessman.getPosition().getRow() + i >= boardSize) return false;
             if (chessBoard.get(index + boardSize * i) == null || !chessBoard.get(index + boardSize * i).getColor().equals(chessman.getColor()))
                 return false;
         }
-        return false;
+        return true;
     }
 
     private Boolean checkUpLeft(Integer index, Chessman chessman) {
@@ -108,21 +108,36 @@ public class RenjuGame {
             if (chessBoard.get(index - (boardSize + 1) * i) == null || !chessBoard.get(index - (boardSize + 1) * i).getColor().equals(chessman.getColor()))
                 return false;
         }
-        return false;
+        return true;
     }
 
     private Boolean checkUpRight(Integer index, Chessman chessman) {
-
-        return false;
+        for (int i = 1; i < 5; i++) {
+            if (chessman.getPosition().getRow() - i < 0 || chessman.getPosition().getColumn() + i >= boardSize)
+                return false;
+            if (chessBoard.get(index - (boardSize - 1) * i) == null || !chessBoard.get(index - (boardSize - 1) * i).getColor().equals(chessman.getColor()))
+                return false;
+        }
+        return true;
     }
 
     private Boolean checkDownLeft(Integer index, Chessman chessman) {
-
-        return false;
+        for (int i = 1; i < 5; i++) {
+            if (chessman.getPosition().getRow() + i >= boardSize || chessman.getPosition().getColumn() - i < 0)
+                return false;
+            if (chessBoard.get(index + (boardSize - 1) * i) == null || !chessBoard.get(index + (boardSize - 1) * i).getColor().equals(chessman.getColor()))
+                return false;
+        }
+        return true;
     }
 
     private Boolean checkDownRight(Integer index, Chessman chessman) {
-
-        return false;
+        for (int i = 1; i < 5; i++) {
+            if (chessman.getPosition().getRow() + i >= boardSize || chessman.getPosition().getColumn() + i >= boardSize)
+                return false;
+            if (chessBoard.get(index + (boardSize + 1) * i) == null || !chessBoard.get(index + (boardSize + 1) * i).getColor().equals(chessman.getColor()))
+                return false;
+        }
+        return true;
     }
 }
