@@ -20,9 +20,14 @@ public class RenjuGame {
     private Participants participants = new Participants();
     //棋盘
     private List<Chessman> chessBoard = new ArrayList<>();
+    //落子的顺序
+    private Integer stepOrder = 0;
 
 
     public RenjuGame() {
+        for (int i = 0; i < boardSize * boardSize; i++) {
+            chessBoard.add(null);
+        }
     }
 
     public Participants getParticipants() {
@@ -44,13 +49,18 @@ public class RenjuGame {
             if (i % boardSize == 0) {
                 System.out.println();
             }
-            System.out.print(chessBoard.get(i).getColor());
+            if (chessBoard.get(i) == null) {
+                System.out.print(0);
+            } else {
+                System.out.print(chessBoard.get(i).getColor());
+            }
         }
     }
 
     private String checkAllDirection(Chessman chessman) {
         Integer index = chessman.getPosition().getRow() * boardSize + chessman.getPosition().getColumn();
-        chessBoard.add(index, chessman);
+        chessman.setOrder(stepOrder++);
+        chessBoard.set(index, chessman);
         if (checkLeft(index, chessman)
                 || checkRight(index, chessman)
                 || checkUp(index, chessman)
