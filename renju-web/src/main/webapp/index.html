@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Bootstrap 101 Template</title>
+
+    <link href="css/bootstrap-combined.min.css" rel="stylesheet">
+    <link href="css/layoutit.css" rel="stylesheet">
+
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="img/favicon.png">
+
+    <script type="text/javascript" src="js/jquery-2.0.0.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/jquery.ui.touch-punch.min.js"></script>
+    <script type="text/javascript" src="js/jquery.htmlClean.js"></script>
+    <!--<script type="text/javascript" src="ckeditor/ckeditor.js"></script>-->
+    <!--<script type="text/javascript" src="ckeditor/config.js"></script>-->
+    <!--<script type="text/javascript" src="js/scripts.js"></script>-->
+    <!--棋盘-->
+    <script type="text/javascript" src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+    <script type="text/javascript" src="js/chessboard.js"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <a id="modal-493620" href="#modal-container-493620" role="button" class="btn" data-toggle="modal"
+               style="display: none">触发遮罩窗体</a>
+
+            <div id="modal-container-493620" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-header">
+                    <h3 id="myModalLabel">
+                        请为您起一个好听的名字!
+                    </h3>
+                </div>
+                <div class="modal-body" contentEditable="true" id="userNameInput">
+                    游客玩家
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="startGameBtn" data-dismiss="modal">开始游戏</button>
+                </div>
+            </div>
+            <h3>
+                renju
+            </h3>
+        </div>
+    </div>
+
+    <div id="gameListArea">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span8">
+                    <h3>
+                        游戏列表
+                    </h3>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>
+                                编号
+                            </th>
+                            <th>
+                                产品
+                            </th>
+                            <th>
+                                交付时间
+                            </th>
+                            <th>
+                                状态
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                1
+                            </td>
+                            <td>
+                                TB - Monthly
+                            </td>
+                            <td>
+                                01/04/2012
+                            </td>
+                            <td>
+                                Default
+                            </td>
+                        </tr>
+                        <tr class="success">
+                            <td>
+                                1
+                            </td>
+                            <td>
+                                TB - Monthly
+                            </td>
+                            <td>
+                                01/04/2012
+                            </td>
+                            <td>
+                                Approved
+                            </td>
+                        </tr>
+                        <tr class="error">
+                            <td>
+                                2
+                            </td>
+                            <td>
+                                TB - Monthly
+                            </td>
+                            <td>
+                                02/04/2012
+                            </td>
+                            <td>
+                                Declined
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="span4">
+                    <h3>
+                        玩家列表
+                    </h3>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>
+                                编号
+                            </th>
+                            <th>
+                                产品
+                            </th>
+                            <th>
+                                交付时间
+                            </th>
+                            <th>
+                                状态
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                1
+                            </td>
+                            <td>
+                                TB - Monthly
+                            </td>
+                            <td>
+                                01/04/2012
+                            </td>
+                            <td>
+                                Default
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <button class="btn" type="button">创建游戏</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="gamePlayArea" style="display: none">
+        <div class="row-fluid">
+            <div class="span6">
+                <canvas id="chessboard" width="750" height="750"></canvas>
+            </div>
+            <div class="span6">
+                <div class="row-fluid">
+                    <div class="span4">
+                        <p>
+                            玩家A
+                        </p>
+                    </div>
+                    <div class="span4">
+                        <p>
+                            VS
+                        </p>
+                    </div>
+                    <div class="span4">
+                        <p>
+                            玩家B
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row-fluid">
+                    <div class="span12">
+                        <dl>
+                            <dt>
+                                观战者
+                            </dt>
+                            <dd>
+                                围观者1
+                            </dd>
+                            <dd>
+                                围观者2
+                            </dd>
+                            <dd>
+                                围观者3
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //强制用户起个名字过来
+    $('#modal-container-493620').modal({
+        keyboard: false
+    }).on('hide.bs.modal', function (e) {
+        var userName = $("#userNameInput").text().trim();
+        if (!userName) {
+            e.preventDefault();
+            alert('名字不能为空');
+        }
+    });
+
+    initChessBoard();
+
+</script>
+</body>
+</html>
