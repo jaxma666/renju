@@ -29,6 +29,7 @@ public class PushCenterImpl implements IPushCenter {
         }
     }
 
+
     @Override
     public void pushToAllParticipants(ActionResult actionResult, Participants participants) {
         TextMessage textMessage = new TextMessage(JSON.toJSONString(actionResult));
