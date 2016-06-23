@@ -21,7 +21,6 @@ public class DoStepMessageHandler implements IMessageHandler {
     IPushCenter pushCenter;
     @Resource
     IUserSessionCenter userSessionCenter;
-
     @Resource
     IRenjuCenter renjuCenter;
 
