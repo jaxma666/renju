@@ -72,11 +72,48 @@ public class RenjuController {
             }
         }
         renjuGameVO.setVisitors(visitorNameList);
+        renjuGameVO.setGameState(GameStateVO.detect(renjuGame.gameState).getDesc());
         return renjuGameVO;
     }
 
+    public enum GameStateVO {
+        WAITING(0, "等待对手"), PLAYING(1, "游戏中");
+
+        private int code;
+        private String desc;
+
+        GameStateVO(int code, String desc) {
+            this.code = code;
+            this.desc = desc;
+        }
+
+        public static GameStateVO detect(AtomicInteger atomicInteger) {
+            if (atomicInteger.intValue() == 0) {
+                return WAITING;
+            } else {
+                return PLAYING;
+            }
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public void setCode(int code) {
+            this.code = code;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public void setDesc(String desc) {
+            this.desc = desc;
+        }
+    }
+
     private static class RenjuGameVO {
-        AtomicInteger gameState;
+        String gameState;
         String creator;
         String joiner;
         List<String> visitors;
@@ -89,13 +126,6 @@ public class RenjuController {
             this.visitors = visitors;
         }
 
-        public AtomicInteger getGameState() {
-            return gameState;
-        }
-
-        public void setGameState(AtomicInteger gameState) {
-            this.gameState = gameState;
-        }
 
         public String getCreator() {
             return creator;
@@ -111,6 +141,14 @@ public class RenjuController {
 
         public void setJoiner(String joiner) {
             this.joiner = joiner;
+        }
+
+        public String getGameState() {
+            return gameState;
+        }
+
+        public void setGameState(String gameState) {
+            this.gameState = gameState;
         }
     }
 }

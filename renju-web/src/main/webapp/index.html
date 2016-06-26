@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,10 +21,16 @@
     <!--<script type="text/javascript" src="ckeditor/ckeditor.js"></script>-->
     <!--<script type="text/javascript" src="ckeditor/config.js"></script>-->
     <!--<script type="text/javascript" src="js/scripts.js"></script>-->
+    <!--vue-->
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/0.9.0/vue-resource.min.js"></script>
+
     <!--棋盘-->
     <script type="text/javascript" src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
     <script type="text/javascript" src="js/chessboard.js"></script>
+    <!--游戏大厅-->
     <script type="text/javascript" src="js/gameHall.js"></script>
+
 </head>
 <body>
 
@@ -57,7 +63,7 @@
     <div id="gameListArea">
         <div class="container-fluid">
             <div class="row-fluid">
-                <div class="span8">
+                <div class="span8" id="gameListVue">
                     <h3>
                         游戏列表
                     </h3>
@@ -85,39 +91,22 @@
                         </tr>
                         </thead>
                         <tbody>
-
-                        <tr class="success">
+                        <tr v-for="item in items" class="info">
+                            <td>{{ $index }}</td>
+                            <td>{{ item.creator }}</td>
+                            <td>{{ item.joiner }}</td>
+                            <td>{{ item.gameState }}</td>
                             <td>
-                                1
+                                <button>挑战</button>
                             </td>
                             <td>
-                                TB - Monthly
-                            </td>
-                            <td>
-                                01/04/2012
-                            </td>
-                            <td>
-                                Approved
-                            </td>
-                        </tr>
-                        <tr class="error">
-                            <td>
-                                2
-                            </td>
-                            <td>
-                                TB - Monthly
-                            </td>
-                            <td>
-                                02/04/2012
-                            </td>
-                            <td>
-                                Declined
+                                <button>观战</button>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="span4">
+                <div class="span4" id="playerListVue">
                     <h3>
                         玩家列表
                     </h3>
@@ -133,26 +122,19 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                呵呵呵呵
-                            </td>
+                        <tr v-for="item in items" class="error" track-by="$index">
+                            <td>{{ $index }}</td>
+                            <td>{{ item }}</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        <div class="row-fluid">
+        <div class="row-fluid" id="gameHallControl">
             <div class="span12">
                 <p>
-                    <button class="btn" type="button">创建游戏</button>
-                </p>
-                <p>
-                    <button class="btn" type="button">刷新大厅</button>
+                    <button class="btn" type="button" v-on:click="startCreateGame">创建游戏</button>
                 </p>
             </div>
         </div>
@@ -204,7 +186,28 @@
         </div>
     </div>
 </div>
+
 <script>
+    //进入游戏大厅,直接创建websocket连接
+    var connection = new WebSocket("ws://localhost:8080/renju");
+    connection.onopen = function () {
+        console.log("websocket链接已打开...")
+    };
+    connection.onerror = function (e) {
+        alert('websocket Error:' + e);
+    };
+    connection.onclose = function (e) {
+        alert('websocket close code:' + e.code + ' reason:' + e.reason);
+    }
+    //websocket客户端的控制中心
+    connection.onmessage = function (e) {
+        console.log('Server: ' + e.data);
+    };
+    //websocket客户端的调用中心
+    function sendMessage(data) {
+        connection.send(data);
+    }
+
     //强制用户起个名字过来
     $('#modal-container-493620').modal({
         keyboard: false
@@ -214,11 +217,17 @@
             e.preventDefault();
             alert('名字不能为空');
         }
+        //根据填的名称创建用户
+        var simpleProtocol = {};
+        simpleProtocol.action = "create_user";
+        simpleProtocol.content = userName;
+        connection.send(JSON.stringify(simpleProtocol));
     });
-    //$($("#gameListArea").find("table")[0]).find("tbody");
 
     initChessBoard();
+    initGameHall();
 
 </script>
+
 </body>
 </html>
