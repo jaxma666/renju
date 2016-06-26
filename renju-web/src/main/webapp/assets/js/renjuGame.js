@@ -89,8 +89,11 @@ function initGame() {
         data: {
             gridSize: 50,
             validateSize: 700,
-            gapSize: gridSize / 2,
-            boardSize: validateSize + gapSize * 2,
+            //vue不支持动态初始化?坑..
+            // gapSize: this.gridSize / 2,
+            // boardSize: this.validateSize + this.gapSize * 2,
+            gapSize: 25,
+            boardSize: 800,
             pieceColor: "#000"
         },
         methods: {
@@ -103,28 +106,29 @@ function initGame() {
                 // backgroud.graphics
                 //   .beginFill("BlanchedAlmond").drawRect(0, 0, boardSize, boardSize);
                 // stage.addChild(backgroud);
-                var gridCount = validateSize / gridSize;
+                var gridCount = this.validateSize / this.gridSize;
+                var self = this;
                 for (var row = 0; row <= gridCount; ++row) {
                     for (var col = 0; col <= gridCount; ++col) {
                         var piece = new createjs.Shape();
-                        resetPiece(piece);
-                        piece.x = col * gridSize + gapSize - gridSize / 2;
-                        piece.y = row * gridSize + gapSize - gridSize / 2;
+                        this.resetPiece(piece);
+                        piece.x = col * this.gridSize + this.gapSize - this.gridSize / 2;
+                        piece.y = row * this.gridSize + this.gapSize - this.gridSize / 2;
                         piece.on("click", function (event) {
                             if (!event.target.isChecked) {
-                                checkPiece(event.target);
+                                self.checkPiece(event.target);
                                 stage.update();
                             }
                         });
                         piece.on("mouseover", function (event) {
                             if (!event.target.isChecked) {
-                                precheckPiece(event.target);
+                                self.precheckPiece(event.target);
                                 stage.update();
                             }
                         });
                         piece.on("mouseout", function (event) {
                             if (!event.target.isChecked) {
-                                resetPiece(event.target);
+                                self.resetPiece(event.target);
                                 stage.update();
                             }
                         });
@@ -142,17 +146,17 @@ function initGame() {
             resetPiece: function (piece) {
                 piece.graphics
                     .beginFill("BlanchedAlmond")
-                    .drawRect(0, 0, gridSize, gridSize)
+                    .drawRect(0, 0, this.gridSize, this.gridSize)
                     .setStrokeStyle(1).beginStroke("#000")
-                    .moveTo(0, gridSize / 2).lineTo(gridSize, gridSize / 2)
-                    .moveTo(gridSize / 2, 0).lineTo(gridSize / 2, gridSize)
+                    .moveTo(0, this.gridSize / 2).lineTo(this.gridSize, this.gridSize / 2)
+                    .moveTo(this.gridSize / 2, 0).lineTo(this.gridSize / 2, this.gridSize)
                     .endStroke();
             }
             ,
             checkPiece: function (piece) {
                 piece.graphics
-                    .beginFill(pieceColor)
-                    .drawCircle(gridSize / 2, gridSize / 2, gridSize / 3);
+                    .beginFill(this.pieceColor)
+                    .drawCircle(this.gridSize / 2, this.gridSize / 2, this.gridSize / 3);
                 piece.isChecked = true;
             }
             ,
@@ -160,8 +164,8 @@ function initGame() {
                 var crossSize = 10;
                 piece.graphics
                     .setStrokeStyle(2).beginStroke("red")
-                    .moveTo(gridSize / 2 - crossSize, gridSize / 2).lineTo(gridSize / 2 + crossSize, gridSize / 2)
-                    .moveTo(gridSize / 2, gridSize / 2 - crossSize).lineTo(gridSize / 2, gridSize / 2 + crossSize)
+                    .moveTo(this.gridSize / 2 - crossSize, this.gridSize / 2).lineTo(this.gridSize / 2 + crossSize, this.gridSize / 2)
+                    .moveTo(this.gridSize / 2, this.gridSize / 2 - crossSize).lineTo(this.gridSize / 2, this.gridSize / 2 + crossSize)
                     .endStroke();
             }
         },
