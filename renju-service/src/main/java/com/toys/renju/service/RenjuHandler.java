@@ -30,6 +30,9 @@ public class RenjuHandler extends TextWebSocketHandler {
     @Resource
     IPushCenter pushCenter;
 
+    @Resource
+    IRenjuCenter renjuCenter;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         logger.error("新用户创建了连接: {}", session.getId());
@@ -72,5 +75,6 @@ public class RenjuHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         userSessionCenter.offLine(session);
+        renjuCenter.leftGame(session);
     }
 }

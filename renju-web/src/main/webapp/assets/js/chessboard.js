@@ -31,7 +31,8 @@ function precheckPiece(piece) {
 }
 
 function initChessBoard() {
-    var stage = new createjs.Stage("chessboard");
+    
+    var stage = new createjs.Stage("chessboardVue");
     stage.enableMouseOver();
 
     // var backgroud = new createjs.Shape();
@@ -73,7 +74,6 @@ function initChessBoard() {
             stage.addChild(piece);
         }
     }
-
 
     stage.x = 0;
     stage.y = 0;
