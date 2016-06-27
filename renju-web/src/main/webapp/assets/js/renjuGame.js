@@ -87,9 +87,14 @@ var gamePlayRightVue = new Vue({
         joiner: {}
     },
     methods: {
-        updategamePlayRight: function (creator, joiner) {
-            this.creator = creator;
-            this.joiner = joiner;
+        updategamePlayRight: function ($index) {
+            var self = this;
+            $.getJSON("/getGameInfo", $index, function (data) {
+                if (data.success) {
+                    self.creator = data.result.creator;
+                    self.joiner = data.result.joiner;
+                }
+            });
         }
     }
 })

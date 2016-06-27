@@ -189,7 +189,7 @@
             return;
         }
         if (json.success) {
-            switch (json.result) {
+            switch (json.action) {
                 case "create_game_success":
                     gameHallControl.finishCreateGame();
                     break;

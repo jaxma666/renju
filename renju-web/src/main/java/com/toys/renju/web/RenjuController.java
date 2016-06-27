@@ -43,10 +43,10 @@ public class RenjuController {
 
     @RequestMapping("/getGameInfo")
     @ResponseBody
-    public ApiResult<RenjuGame> getGameInfo(int index) {
-        ApiResult<RenjuGame> apiResult = new ApiResult<>();
+    public ApiResult<RenjuGameVO> getGameInfo(int index) {
+        ApiResult<RenjuGameVO> apiResult = new ApiResult<>();
         List<RenjuGame> renjuGameList = renjuCenter.getGameList();
-        apiResult.setSuccessResult(renjuGameList.get(index));
+        apiResult.setSuccessResult(transDO2VO(renjuGameList.get(index)));
         return apiResult;
     }
 
@@ -87,7 +87,6 @@ public class RenjuController {
 
     public enum GameStateVO {
         WAITING(0, "等待对手"), PLAYING(1, "游戏中");
-
         private int code;
         private String desc;
 
