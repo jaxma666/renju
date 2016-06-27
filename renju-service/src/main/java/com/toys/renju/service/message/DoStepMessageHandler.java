@@ -4,10 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.toys.renju.service.IPushCenter;
 import com.toys.renju.service.IRenjuCenter;
 import com.toys.renju.service.IUserSessionCenter;
-import com.toys.renju.service.code.ErrorCode;
-import com.toys.renju.service.domain.ActionResult;
 import com.toys.renju.service.domain.Chessman;
 import com.toys.renju.service.domain.RenjuGame;
+import com.toys.renju.service.protocol.SimpleProtocol;
 import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.Resource;
@@ -26,11 +25,11 @@ public class DoStepMessageHandler implements IMessageHandler {
 
     @Override
     public void handle(WebSocketSession session, String content) {
-        ActionResult<String> actionResult = new ActionResult<>();
         Chessman chessman = JSON.parseObject(content, Chessman.class);
+        SimpleProtocol simpleProtocol = new SimpleProtocol();
         if (chessman == null) {
-            actionResult.setErrorCode(ErrorCode.INVILAD_CHESSMAN_PROTOCOL);
-            pushCenter.pushMessage(actionResult, session);
+            simpleProtocol.returnError("chess_man_parse_error", "五子棋协议解析失败");
+            pushCenter.pushMessage(simpleProtocol, session);
             return;
         }
         RenjuGame renjuGame = (RenjuGame) session.getAttributes().get(session.getId());
@@ -46,11 +45,11 @@ public class DoStepMessageHandler implements IMessageHandler {
             result = renjuCenter.doStep(renjuGame, chessman);
             renjuGame.blacksTurn = true;
         } else {
-            actionResult.setErrorCode(ErrorCode.TURN_ERROR);
-            pushCenter.pushMessage(actionResult, session);
+            simpleProtocol.returnError("tack_turn_error", "还未轮到你喔");
+            pushCenter.pushMessage(simpleProtocol, session);
             return;
         }
-        actionResult.setSuccessResult(result);
-        pushCenter.pushToAllParticipants(actionResult, renjuGame.getParticipants());
+        simpleProtocol.returnSuccess("do_step_success", "下棋成功,游戏继续?");
+        pushCenter.pushToAllParticipants(simpleProtocol, renjuGame.getParticipants());
     }
 }

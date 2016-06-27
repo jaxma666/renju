@@ -3,7 +3,7 @@ package com.toys.renju.web;
 import com.google.common.collect.Lists;
 import com.toys.renju.service.IRenjuCenter;
 import com.toys.renju.service.IUserSessionCenter;
-import com.toys.renju.service.domain.ActionResult;
+import com.toys.renju.service.domain.ApiResult;
 import com.toys.renju.service.domain.Participants;
 import com.toys.renju.service.domain.RenjuGame;
 import org.springframework.beans.BeanUtils;
@@ -30,37 +30,37 @@ public class RenjuController {
 
     @RequestMapping("/getAllGames")
     @ResponseBody
-    public ActionResult<List> getAllGames() {
-        ActionResult<List> actionResult = new ActionResult<>();
+    public ApiResult<List> getAllGames() {
+        ApiResult<List> apiResult = new ApiResult<>();
         List<RenjuGame> renjuGameList = renjuCenter.getGameList();
         List<RenjuGameVO> renjuGameVOList = Lists.newArrayList();
         for (RenjuGame each : renjuGameList) {
             renjuGameVOList.add(transDO2VO(each));
         }
-        actionResult.setSuccessResult(renjuGameVOList);
-        return actionResult;
+        apiResult.setSuccessResult(renjuGameVOList);
+        return apiResult;
     }
 
     @RequestMapping("/getGameInfo")
     @ResponseBody
-    public ActionResult<RenjuGame> getGameInfo(int index) {
-        ActionResult<RenjuGame> actionResult = new ActionResult<>();
+    public ApiResult<RenjuGame> getGameInfo(int index) {
+        ApiResult<RenjuGame> apiResult = new ApiResult<>();
         List<RenjuGame> renjuGameList = renjuCenter.getGameList();
-        actionResult.setSuccessResult(renjuGameList.get(index));
-        return actionResult;
+        apiResult.setSuccessResult(renjuGameList.get(index));
+        return apiResult;
     }
 
     @RequestMapping("/getAllUsers")
     @ResponseBody
-    public ActionResult<List> getAllUsers() {
-        ActionResult<List> actionResult = new ActionResult<>();
+    public ApiResult<List> getAllUsers() {
+        ApiResult<List> apiResult = new ApiResult<>();
         List<String> userNameList = Lists.newArrayList();
         Set<WebSocketSession> webSocketSessionSet = userSessionCenter.getUserSessionSet();
         for (WebSocketSession each : webSocketSessionSet) {
             userNameList.add((String) each.getAttributes().get("userName"));
         }
-        actionResult.setSuccessResult(userNameList);
-        return actionResult;
+        apiResult.setSuccessResult(userNameList);
+        return apiResult;
     }
 
     private RenjuGameVO transDO2VO(RenjuGame renjuGame) {

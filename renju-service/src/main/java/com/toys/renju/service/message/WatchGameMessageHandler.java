@@ -2,9 +2,8 @@ package com.toys.renju.service.message;
 
 import com.toys.renju.service.IPushCenter;
 import com.toys.renju.service.IRenjuCenter;
-import com.toys.renju.service.code.ErrorCode;
-import com.toys.renju.service.domain.ActionResult;
 import com.toys.renju.service.domain.RenjuGame;
+import com.toys.renju.service.protocol.SimpleProtocol;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -24,15 +23,15 @@ public class WatchGameMessageHandler implements IMessageHandler {
 
     @Override
     public void handle(WebSocketSession session, String content) {
-        ActionResult<String> actionResult = new ActionResult<>();
         List<RenjuGame> renjuGameList = renjuCenter.getGameList();
         RenjuGame renjuGame = renjuGameList.get(Integer.valueOf(content));
         Boolean result = renjuCenter.watchGame(session, renjuGame);
+        SimpleProtocol simpleProtocol = new SimpleProtocol();
         if (result) {
-            actionResult.setSuccessResult("watch_game_success"+session.getAttributes().get("userName"));
+            simpleProtocol.returnSuccess("watch_game_success", "观看游戏成功");
         } else {
-            actionResult.setErrorCode(ErrorCode.WATCH_GAME_FAILED);
+            simpleProtocol.returnError("watch_game_failed", "观看游戏失败");
         }
-        pushCenter.pushToAllParticipants(actionResult, renjuGame.getParticipants());
+        pushCenter.pushToAllParticipants(simpleProtocol, renjuGame.getParticipants());
     }
 }

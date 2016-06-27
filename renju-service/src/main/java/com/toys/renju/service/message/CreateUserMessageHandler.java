@@ -2,7 +2,7 @@ package com.toys.renju.service.message;
 
 import com.toys.renju.service.IPushCenter;
 import com.toys.renju.service.IUserSessionCenter;
-import com.toys.renju.service.domain.ActionResult;
+import com.toys.renju.service.protocol.SimpleProtocol;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -23,8 +23,8 @@ public class CreateUserMessageHandler implements IMessageHandler {
     public void handle(WebSocketSession session, String content) {
         //玩家上线
         userSessionCenter.onLine(session, content);
-        ActionResult<String> actionResult = new ActionResult<>();
-        actionResult.setSuccessResult("欢迎玩家: " + content);
-        pushCenter.pushMessage(actionResult, session);
+        SimpleProtocol simpleProtocol = new SimpleProtocol();
+        simpleProtocol.returnSuccess("welcome_player", "欢迎玩家");
+        pushCenter.pushMessage(simpleProtocol, session);
     }
 }
