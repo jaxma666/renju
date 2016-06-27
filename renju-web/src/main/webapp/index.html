@@ -28,8 +28,7 @@
     <!--棋盘-->
     <script type="text/javascript" src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
     <!--<script type="text/javascript" src="js/chessboardVue.js"></script>-->
-    <!--游戏大厅-->
-    <script type="text/javascript" src="js/renjuGame.js"></script>
+
 
 </head>
 <body>
@@ -97,7 +96,7 @@
                             <td>{{ item.joiner }}</td>
                             <td>{{ item.gameState }}</td>
                             <td>
-                                <button>挑战</button>
+                                <button v-on:click="startJoinGame($index)">挑战</button>
                             </td>
                             <td>
                                 <button>观战</button>
@@ -167,6 +166,7 @@
 </div>
 
 <script>
+
     //进入游戏大厅,直接创建websocket连接
     var connection = new WebSocket("ws://localhost:8080/renju");
     connection.onopen = function () {
@@ -181,6 +181,20 @@
     //websocket客户端的控制中心
     connection.onmessage = function (e) {
         console.log('Server: ' + e.data);
+        var json;
+        try {
+            json = JSON.parse(e.data);
+        } catch (error) {
+            console.log(error);
+            return;
+        }
+        if (json.success) {
+            switch (json.result) {
+                case "create_game_success":
+                    gameHallControl.finishCreateGame();
+                    break;
+            }
+        }
     };
     //websocket客户端的调用中心
     function sendMessage(data) {
@@ -206,9 +220,10 @@
         connection.send(JSON.stringify(simpleProtocol));
     });
 
-    initGame();
-
+    //    initGame();
 </script>
+<!--游戏大厅-->
+<script type="text/javascript" src="js/renjuGame.js"></script>
 
 </body>
 </html>

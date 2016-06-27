@@ -41,6 +41,15 @@ public class RenjuController {
         return actionResult;
     }
 
+    @RequestMapping("/getGameInfo")
+    @ResponseBody
+    public ActionResult<RenjuGame> getGameInfo(int index) {
+        ActionResult<RenjuGame> actionResult = new ActionResult<>();
+        List<RenjuGame> renjuGameList = renjuCenter.getGameList();
+        actionResult.setSuccessResult(renjuGameList.get(index));
+        return actionResult;
+    }
+
     @RequestMapping("/getAllUsers")
     @ResponseBody
     public ActionResult<List> getAllUsers() {

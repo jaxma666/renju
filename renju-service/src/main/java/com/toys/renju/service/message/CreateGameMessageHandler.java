@@ -22,7 +22,7 @@ public class CreateGameMessageHandler implements IMessageHandler {
     public void handle(WebSocketSession session, String content) {
         renjuCenter.createGame(session);
         ActionResult<String> actionResult = new ActionResult<>();
-        actionResult.setSuccessResult("创建游戏成功!");
+        actionResult.setSuccessResult("create_game_success");
         pushCenter.pushMessage(actionResult, session);
     }
 }
