@@ -1,8 +1,7 @@
 package com.toys.renju.service;
 
 import com.alibaba.fastjson.JSON;
-import com.toys.renju.service.code.ErrorCode;
-import com.toys.renju.service.domain.ActionResult;
+import com.toys.renju.service.domain.ApiResult;
 import com.toys.renju.service.message.IMessageHandler;
 import com.toys.renju.service.message.MessageHandlerFactory;
 import com.toys.renju.service.protocol.SimpleProtocol;
@@ -30,6 +29,9 @@ public class RenjuHandler extends TextWebSocketHandler {
     @Resource
     IPushCenter pushCenter;
 
+    @Resource
+    IRenjuCenter renjuCenter;
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         logger.error("新用户创建了连接: {}", session.getId());
@@ -43,25 +45,25 @@ public class RenjuHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) {
-        SimpleProtocol simpleProtocol;
-        ActionResult<String> actionResult = new ActionResult<>();
+        SimpleProtocol simpleProtocolIn;
+        SimpleProtocol simpleProtocolOut = new SimpleProtocol();
+        ApiResult<String> apiResult = new ApiResult<>();
         try {
-            simpleProtocol = parseMessage(message.getPayload());
+            simpleProtocolIn = parseMessage(message.getPayload());
         } catch (Exception e) {
             logger.error("解析协议失败: message:{}", message, e);
-            actionResult.setErrorCode(ErrorCode.ERROR_PROTOCOL_FORMAT);
-            pushCenter.pushMessage(actionResult, session);
+            simpleProtocolOut.returnError("protocol_format_error", "协议解析失败");
+            pushCenter.pushMessage(simpleProtocolOut, session);
             return;
         }
-        IMessageHandler messageHandler = messageHandlerFactory.getMessageHandler(simpleProtocol.getAction());
+        IMessageHandler messageHandler = messageHandlerFactory.getMessageHandler(simpleProtocolIn.getAction());
         if (messageHandler == null) {
             messageHandler = messageHandlerFactory.getMessageHandler("default");
         }
         try {
-            messageHandler.handle(session, simpleProtocol.getContent());
+            messageHandler.handle(session, simpleProtocolIn.getContent());
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            //todo 这里要不要通知客户端呢?
         }
     }
 
@@ -73,5 +75,6 @@ public class RenjuHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         userSessionCenter.offLine(session);
+        renjuCenter.leftGame(session);
     }
 }

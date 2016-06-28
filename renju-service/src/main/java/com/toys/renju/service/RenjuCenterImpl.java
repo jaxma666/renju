@@ -1,7 +1,6 @@
 package com.toys.renju.service;
 
 import com.toys.renju.service.domain.Chessman;
-import com.toys.renju.service.domain.Participants;
 import com.toys.renju.service.domain.RenjuGame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,11 +29,12 @@ public class RenjuCenterImpl implements IRenjuCenter {
     }
 
     @Override
-    public void createGame(WebSocketSession creator) {
+    public Integer createGame(WebSocketSession creator) {
         RenjuGame renjuGame = new RenjuGame();
         renjuGame.getParticipants().setCreator(creator);
         creator.getAttributes().put(creator.getId(), renjuGame);
         renjuGameList.add(renjuGame);
+        return renjuGameList.size() - 1;
     }
 
     @Override
@@ -64,19 +64,12 @@ public class RenjuCenterImpl implements IRenjuCenter {
     @Override
     public void leftGame(WebSocketSession oneUser) {
         RenjuGame renjuGame = (RenjuGame) oneUser.getAttributes().get(oneUser.getId());
-        Participants participants = renjuGame.getParticipants();
-        participants.getCreator().getAttributes().clear();
-        participants.getJoiner().getAttributes().clear();
-        List<WebSocketSession> visitorList = participants.getVisitor();
-        for (WebSocketSession each : visitorList) {
-            each.getAttributes().clear();
-        }
         renjuGameList.remove(renjuGame);
     }
 
     @Override
     public String doStep(RenjuGame renjuGame, Chessman chessman) {
-        return renjuGame.doNextStep(chessman);
+        return renjuGame.checkAllDirection(chessman);
     }
 }
 

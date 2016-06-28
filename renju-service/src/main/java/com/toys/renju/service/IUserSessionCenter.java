@@ -16,4 +16,6 @@ public interface IUserSessionCenter {
     Set<WebSocketSession> getUserSessionSet();
 
     Integer getUserCout();
+
+    String getUserName(WebSocketSession session);
 }

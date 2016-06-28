@@ -45,4 +45,9 @@ public class UserSessionCenterImpl implements IUserSessionCenter {
     public Integer getUserCout() {
         return userSessionSet.size();
     }
+
+    @Override
+    public String getUserName(WebSocketSession session) {
+        return (String) session.getAttributes().get("userName");
+    }
 }

@@ -1,8 +1,7 @@
 package com.toys.renju.service.message;
 
 import com.toys.renju.service.IPushCenter;
-import com.toys.renju.service.code.ErrorCode;
-import com.toys.renju.service.domain.ActionResult;
+import com.toys.renju.service.protocol.SimpleProtocol;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -20,8 +19,8 @@ public class DefaultMessageHandler implements IMessageHandler {
 
     @Override
     public void handle(WebSocketSession session, String content) {
-        ActionResult<String> actionResult = new ActionResult<>();
-        actionResult.setErrorCode(ErrorCode.INVILAD_PROTOCOL);
-        pushCenter.pushMessage(actionResult, session);
+        SimpleProtocol simpleProtocol = new SimpleProtocol();
+        simpleProtocol.returnError("protocol_parse_error", "协议解析失败");
+        pushCenter.pushMessage(simpleProtocol, session);
     }
 }

@@ -6,7 +6,7 @@ import com.toys.renju.service.code.ErrorCode;
  * Created by lingyao on 16/5/26.
  */
 
-public class ActionResult<T> {
+public class ApiResult<T> {
 
     /**
      * api调用是否成功
@@ -20,6 +20,7 @@ public class ActionResult<T> {
      * 错误信息
      */
     private String errorMsg;
+
     /**
      * 返回结果
      */

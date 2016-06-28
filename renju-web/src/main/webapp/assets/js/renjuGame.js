@@ -1,0 +1,248 @@
+//游戏大厅对战列表
+var gameListVue = new Vue({
+    el: '#gameListVue',
+    data: {
+        items: []
+    },
+    methods: {
+        updateGameList: function () {
+            var self = this;
+            $.getJSON("/getAllGames", function (data) {
+                // console.log(data)
+                if (data.success) {
+                    self.items = data.result;
+                    setTimeout(self.updateGameList, 5000);
+                }
+            });
+        },
+        startJoinGame: function ($index) {
+            var simpleProtocol = {};
+            simpleProtocol.action = "join_game";
+            simpleProtocol.content = $index;
+            chessboardVue.changeColor();
+            sendMessage(JSON.stringify(simpleProtocol));
+        },
+        finishJoinGame: function () {
+            $("#gameListArea").hide();
+            $("#gamePlayArea").show();
+            gamePlayRightVue.updategamePlayRight("", userName);
+        }
+    },
+    ready: function () {
+        this.updateGameList();
+    }
+})
+
+//游戏大厅玩家列表
+var playerListVue = new Vue({
+    el: '#playerListVue',
+    data: {
+        items: []
+    },
+    methods: {
+        updatePlayerList: function () {
+            var self = this;
+            $.getJSON("/getAllUsers", function (data) {
+                // console.log(data)
+                if (data.success) {
+
+                    self.items = data.result;
+                    setTimeout(self.updatePlayerList, 5000);
+                }
+            });
+        }
+    },
+    ready: function () {
+        this.updatePlayerList();
+    }
+})
+
+
+//游戏大厅控制器(创建游戏)
+var gameHallControl = new Vue({
+    el: '#gameHallControl',
+    data: {},
+    methods: {
+        //创建游戏
+        startCreateGame: function () {
+            var self = this;
+            var simpleProtocol = {};
+            simpleProtocol.action = 'create_game';
+            sendMessage(JSON.stringify(simpleProtocol));
+            // this.finishCreateGame();
+        },
+
+        finishCreateGame: function (index) {
+            $("#gameListArea").hide();
+            $("#gamePlayArea").show();
+            gamePlayRightVue.updategamePlayRight(index);
+        }
+    }
+})
+
+//进入游戏界面后,右侧对战情况
+var gamePlayRightVue = new Vue({
+    el: '#gamePlayRightVue',
+    data: {
+        creator: {},
+        joiner: {}
+    },
+    methods: {
+        updategamePlayRight: function (index) {
+            var self = this;
+            $.getJSON("/getGameInfo?index=" + index, function (data) {
+                if (data.success) {
+                    self.creator = data.result.creator;
+                    self.joiner = data.result.joiner;
+                }
+            });
+        }
+    }
+})
+
+
+// 棋盘类
+// 棋盘格子尺寸
+// 本方颜色
+function Chessboard(gridSize, selfColor) {
+    /** 私有成员 **/
+
+    var validateSize = 700;
+    var gapSize = gridSize / 2;
+    var boardSize = validateSize + gapSize * 2;
+    var gridCount = validateSize / gridSize;
+    var locationMap = new Array();
+
+
+
+    /** 私有方法 **/
+
+    function resetPiece(piece) {
+        piece.graphics
+            .beginFill("BlanchedAlmond")
+            .drawRect(0, 0, gridSize, gridSize)
+            .setStrokeStyle(1).beginStroke("#000")
+            .moveTo(0, gridSize / 2).lineTo(gridSize, gridSize / 2)
+            .moveTo(gridSize / 2, 0).lineTo(gridSize / 2, gridSize)
+            .endStroke();
+    }
+
+    function checkPiece(piece, pieceColor) {
+        piece.graphics
+            .beginFill(pieceColor)
+            .drawCircle(gridSize / 2, gridSize / 2, gridSize / 3);
+        piece.isChecked = true;
+    }
+
+    function precheckPiece(piece) {
+        var crossSize = 10;
+        piece.graphics
+            .setStrokeStyle(2).beginStroke("red")
+            .moveTo(gridSize / 2 - crossSize, gridSize / 2).lineTo(gridSize / 2 + crossSize, gridSize / 2)
+            .moveTo(gridSize / 2, gridSize / 2 - crossSize).lineTo(gridSize / 2, gridSize / 2 + crossSize)
+            .endStroke();
+    }
+
+
+    /** 公有成员 **/
+
+    this.stage = new createjs.Stage("chessboard");
+    this.stage.enableMouseOver();
+
+    /** 公有方法 **/
+
+    this.setPiece = function(row, col, color) {
+        checkPiece(locationMap[row][col], color);
+        this.stage.update();
+    };
+
+    this.onPieceChecked = function(row, col, color) {
+    };
+
+    // var backgroud = new createjs.Shape();
+    // backgroud.x = 0;
+    // backgroud.y = 0;
+    // backgroud.graphics
+    //   .beginFill("BlanchedAlmond").drawRect(0, 0, boardSize, boardSize);
+
+    // this.stage.addChild(backgroud);
+
+
+    for (var row = 0; row <= gridCount; ++row) {
+
+        locationMap[row] = new Array();
+
+        for (var col = 0; col <= gridCount; ++col) {
+            var piece = new createjs.Shape();
+
+            locationMap[row][col] = piece;
+            piece.row = row;
+            piece.col = col;
+
+            resetPiece(piece);
+            piece.x = col * gridSize + gapSize - gridSize / 2;
+            piece.y = row * gridSize + gapSize - gridSize / 2;
+
+            piece.on("click", function (event) {
+                if (!event.target.isChecked) {
+                    checkPiece(event.target, selfColor);
+                    this.onPieceChecked(event.target.row, event.target.col, selfColor);
+                    this.stage.update();
+                }
+            });
+
+            piece.on("mouseover", function (event) {
+                if (!event.target.isChecked) {
+                    precheckPiece(event.target);
+                    this.stage.update();
+                }
+            });
+            piece.on("mouseout", function (event) {
+                if (!event.target.isChecked) {
+                    resetPiece(event.target);
+                    this.stage.update();
+                }
+            });
+
+            this.stage.addChild(piece);
+        }
+    }
+
+    this.stage.x = 0;
+    this.stage.y = 0;
+    this.stage.update();
+}
+
+var chessboard;
+
+var chessboardVue = new Vue({
+    el: '#chessboardVue',
+
+    methods: {
+        tryToSetPiece: function (row, col) {
+            var simpleProtocol = {};
+            simpleProtocol.action = "do_step";
+            var chessman = {};
+            chessman.position = {};
+            chessman.position.row = row / 50;
+            chessman.position.column = col / 50;
+            if (this.pieceColor == "#000") {
+                chessman.color = 0;
+            } else {
+                chessman.color = 1;
+            }
+            simpleProtocol.content = chessman;
+            sendMessage(JSON.stringify(simpleProtocol));
+        },
+        setPiece: function (row, col, color) {
+            chessboard.setPiece(row, col, color);
+        }
+    },
+    ready: function () {
+        chessboard = new Chessboard(50, "#000");
+        chessboard.onPieceChecked = function(row, col, color) {
+            // 通知服务端
+        };
+    }
+})
+
