@@ -189,9 +189,26 @@
             return;
         }
         if (json.success) {
+//            console.log(json);
             switch (json.action) {
                 case "create_game_success":
-                    gameHallControl.finishCreateGame();
+                    gameHallControl.finishCreateGame(json.content);
+                    break;
+                case "join_game_success":
+                    gameHallControl.finishCreateGame(json.content);
+                    break;
+                case "turn_error":
+                    alert(json.content);
+                    break;
+                case "game_go_on":
+                    var chessman = JSON.parse(json.content);
+                    chessboardVue.setPiece(chessman.position.row, chessman.position.column, chessman.color);
+                    break;
+                case "creator_win":
+                    alert(json.content);
+                    break;
+                case "joiner_win":
+                    alert(json.content);
                     break;
             }
         }

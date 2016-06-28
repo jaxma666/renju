@@ -15,7 +15,7 @@ public interface IRenjuCenter {
     public List<RenjuGame> getGameList();
 
     //创建一局棋,并把session关联到棋局id
-    public void createGame(WebSocketSession creator);
+    public Integer createGame(WebSocketSession creator);
 
     //加入一个棋局,把session关联到棋局id
     public Boolean joinGame(WebSocketSession joiner, RenjuGame renjuGame);

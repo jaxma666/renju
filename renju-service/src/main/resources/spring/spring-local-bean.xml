@@ -25,7 +25,7 @@
                 <entry key="join_game" value-ref="joinGameMessageHandler"/>
                 <entry key="watch_game" value-ref="watchGameMessageHandler"/>
                 <entry key="left_game" value-ref="leftGameMessageHandler"/>
-                <entry key="do_step" value-ref="leftGameMessageHandler"/>
+                <entry key="do_step" value-ref="doStepMessageHandler"/>
             </map>
         </property>
     </bean>

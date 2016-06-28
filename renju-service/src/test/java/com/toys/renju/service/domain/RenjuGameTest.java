@@ -17,7 +17,7 @@ public class RenjuGameTest {
         for (int i = 1; i < 6; i++) {
             position.setColumn(i);
             chessman.setPosition(position);
-            System.out.println(renjuGame.doNextStep(chessman));
+            System.out.println(renjuGame.checkAllDirection(chessman));
         }
 
 

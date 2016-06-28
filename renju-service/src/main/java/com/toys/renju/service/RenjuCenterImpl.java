@@ -29,11 +29,12 @@ public class RenjuCenterImpl implements IRenjuCenter {
     }
 
     @Override
-    public void createGame(WebSocketSession creator) {
+    public Integer createGame(WebSocketSession creator) {
         RenjuGame renjuGame = new RenjuGame();
         renjuGame.getParticipants().setCreator(creator);
         creator.getAttributes().put(creator.getId(), renjuGame);
         renjuGameList.add(renjuGame);
+        return renjuGameList.size() - 1;
     }
 
     @Override
@@ -68,7 +69,7 @@ public class RenjuCenterImpl implements IRenjuCenter {
 
     @Override
     public String doStep(RenjuGame renjuGame, Chessman chessman) {
-        return renjuGame.doNextStep(chessman);
+        return renjuGame.checkAllDirection(chessman);
     }
 }
 

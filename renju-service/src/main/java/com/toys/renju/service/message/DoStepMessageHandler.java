@@ -7,6 +7,7 @@ import com.toys.renju.service.IUserSessionCenter;
 import com.toys.renju.service.domain.Chessman;
 import com.toys.renju.service.domain.RenjuGame;
 import com.toys.renju.service.protocol.SimpleProtocol;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.Resource;
@@ -14,6 +15,8 @@ import javax.annotation.Resource;
 /**
  * Created by lingyao on 16/6/3.
  */
+
+@Service("doStepMessageHandler")
 public class DoStepMessageHandler implements IMessageHandler {
 
     @Resource
@@ -45,11 +48,21 @@ public class DoStepMessageHandler implements IMessageHandler {
             result = renjuCenter.doStep(renjuGame, chessman);
             renjuGame.blacksTurn = true;
         } else {
-            simpleProtocol.returnError("tack_turn_error", "还未轮到你喔");
+            simpleProtocol.returnError("turn_error", "还未轮到你喔");
             pushCenter.pushMessage(simpleProtocol, session);
             return;
         }
-        simpleProtocol.returnSuccess("do_step_success", "下棋成功,游戏继续?");
+        switch (result) {
+            case "game_go_on":
+                simpleProtocol.returnSuccess(result, JSON.toJSONString(chessman));
+                break;
+            case "creator_win":
+                simpleProtocol.returnSuccess(result, "黑方胜!");
+                break;
+            default:
+                simpleProtocol.returnSuccess(result, "白方胜!");
+                break;
+        }
         pushCenter.pushToAllParticipants(simpleProtocol, renjuGame.getParticipants());
     }
 }

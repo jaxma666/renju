@@ -34,7 +34,7 @@ public class JoinGameMessageHandler implements IMessageHandler {
         }
         Boolean result = renjuCenter.joinGame(session, renjuGame);
         if (result) {
-            simpleProtocol.returnSuccess("join_game_success", "加入游戏成功");
+            simpleProtocol.returnSuccess("join_game_success", content);
         } else {
             simpleProtocol.returnError("join_game_failed", "加入游戏失败");
         }

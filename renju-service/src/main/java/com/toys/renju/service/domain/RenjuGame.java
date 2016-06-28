@@ -38,10 +38,10 @@ public class RenjuGame {
         this.participants = participants;
     }
 
-    //核心判断部分
-    public String doNextStep(Chessman chessman) {
-        return checkAllDirection(chessman);
-    }
+
+//    public String doNextStep(Chessman chessman) {
+//        return checkAllDirection(chessman);
+//    }
 
 
     public void showCurrentBoard() {
@@ -57,7 +57,8 @@ public class RenjuGame {
         }
     }
 
-    private String checkAllDirection(Chessman chessman) {
+    //核心判断部分
+    public String checkAllDirection(Chessman chessman) {
         Integer index = chessman.getPosition().getRow() * boardSize + chessman.getPosition().getColumn();
         chessman.setOrder(stepOrder++);
         chessBoard.set(index, chessman);
@@ -69,9 +70,13 @@ public class RenjuGame {
                 || checkUpRight(index, chessman)
                 || checkDownLeft(index, chessman)
                 || checkDownRight(index, chessman)) {
-            return chessman.getColor().toString();
+            if (chessman.getColor() == 0) {
+                return "creator_win";
+            } else {
+                return "joiner_win";
+            }
         }
-        return "go";
+        return "game_go_on";
     }
 
 

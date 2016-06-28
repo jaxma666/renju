@@ -20,9 +20,9 @@ public class CreateGameMessageHandler implements IMessageHandler {
 
     @Override
     public void handle(WebSocketSession session, String content) {
-        renjuCenter.createGame(session);
+        Integer gameIndex = renjuCenter.createGame(session);
         SimpleProtocol simpleProtocol = new SimpleProtocol();
-        simpleProtocol.returnSuccess("create_game_success", "创建游戏成功");
+        simpleProtocol.returnSuccess("create_game_success", String.valueOf(gameIndex));
         pushCenter.pushMessage(simpleProtocol, session);
     }
 }

@@ -19,6 +19,7 @@ var gameListVue = new Vue({
             var simpleProtocol = {};
             simpleProtocol.action = "join_game";
             simpleProtocol.content = $index;
+            chessboardVue.changeColor();
             sendMessage(JSON.stringify(simpleProtocol));
         },
         finishJoinGame: function () {
@@ -71,10 +72,10 @@ var gameHallControl = new Vue({
             // this.finishCreateGame();
         },
 
-        finishCreateGame: function () {
+        finishCreateGame: function (index) {
             $("#gameListArea").hide();
             $("#gamePlayArea").show();
-            gamePlayRightVue.updategamePlayRight(userName, "");
+            gamePlayRightVue.updategamePlayRight(index);
         }
     }
 })
@@ -87,9 +88,9 @@ var gamePlayRightVue = new Vue({
         joiner: {}
     },
     methods: {
-        updategamePlayRight: function ($index) {
+        updategamePlayRight: function (index) {
             var self = this;
-            $.getJSON("/getGameInfo", $index, function (data) {
+            $.getJSON("/getGameInfo?index=" + index, function (data) {
                 if (data.success) {
                     self.creator = data.result.creator;
                     self.joiner = data.result.joiner;
@@ -99,6 +100,7 @@ var gamePlayRightVue = new Vue({
     }
 })
 
+var stage;
 var chessboardVue = new Vue({
     el: '#chessboardVue',
     data: {
@@ -113,7 +115,7 @@ var chessboardVue = new Vue({
     },
     methods: {
         initChessBoard: function () {
-            var stage = new createjs.Stage("chessboardVue");
+            stage = new createjs.Stage("chessboardVue");
             stage.enableMouseOver();
             // var backgroud = new createjs.Shape();
             // backgroud.x = 0;
@@ -131,8 +133,9 @@ var chessboardVue = new Vue({
                     piece.y = row * this.gridSize + this.gapSize - this.gridSize / 2;
                     piece.on("click", function (event) {
                         if (!event.target.isChecked) {
-                            self.checkPiece(event.target);
-                            stage.update();
+                            // self.checkPiece(event.target);
+                            // stage.update();
+                            self.tryToSetPiece(event.target.x, event.target.y);
                         }
                     });
                     piece.on("mouseover", function (event) {
@@ -153,9 +156,9 @@ var chessboardVue = new Vue({
             stage.x = 0;
             stage.y = 0;
             stage.update();
-            function setPiece(row, col, color) {
-                // body...
-            }
+            // function setPiece(row, col, color) {
+            //     // body...
+            // }
         }
         ,
         resetPiece: function (piece) {
@@ -168,11 +171,12 @@ var chessboardVue = new Vue({
                 .endStroke();
         }
         ,
-        checkPiece: function (piece) {
+        checkPiece: function (piece, color) {
             piece.graphics
-                .beginFill(this.pieceColor)
+                .beginFill(color)
                 .drawCircle(this.gridSize / 2, this.gridSize / 2, this.gridSize / 3);
             piece.isChecked = true;
+            stage.update();
         }
         ,
         precheckPiece: function (piece) {
@@ -182,6 +186,36 @@ var chessboardVue = new Vue({
                 .moveTo(this.gridSize / 2 - crossSize, this.gridSize / 2).lineTo(this.gridSize / 2 + crossSize, this.gridSize / 2)
                 .moveTo(this.gridSize / 2, this.gridSize / 2 - crossSize).lineTo(this.gridSize / 2, this.gridSize / 2 + crossSize)
                 .endStroke();
+        },
+        tryToSetPiece: function (row, col) {
+            var simpleProtocol = {};
+            simpleProtocol.action = "do_step";
+            var chessman = {};
+            chessman.position = {};
+            chessman.position.row = row / 50;
+            chessman.position.column = col / 50;
+            if (this.pieceColor == "#000") {
+                chessman.color = 0;
+            } else {
+                chessman.color = 1;
+            }
+            simpleProtocol.content = chessman;
+            sendMessage(JSON.stringify(simpleProtocol));
+        },
+        setPiece: function (row, col, color) {
+            var self = this;
+            var piece = new createjs.Shape();
+            this.resetPiece(piece);
+            piece.x = row * 50;
+            piece.y = col * 50;
+            if (color == 0) {
+                self.checkPiece(piece, "#000");
+            } else {
+                self.checkPiece(piece, "#FFF");
+            }
+        },
+        changeColor: function () {
+            this.pieceColor = "#FFF";
         }
     },
     ready: function () {
