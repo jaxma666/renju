@@ -168,14 +168,31 @@
 <script>
 
     //进入游戏大厅,直接创建websocket连接
-    var connection = new WebSocket("ws://localhost:8080/renju");
+    var connection = new WebSocket("ws://127.0.0.1:8080/renju");
     connection.onopen = function () {
-        console.log("websocket链接已打开...")
+        console.log("websocket链接已打开...");
+
+        //强制用户起个名字过来
+        $('#modal-container-493620').modal({
+            keyboard: false
+        }).on('hide.bs.modal', function (e) {
+            userName = $("#userNameInput").text().trim();
+            if (!userName) {
+                e.preventDefault();
+                alert('名字不能为空');
+            }
+            //根据填的名称创建用户
+            var simpleProtocol = {};
+            simpleProtocol.action = "create_user";
+            simpleProtocol.content = userName;
+            connection.send(JSON.stringify(simpleProtocol));
+        });
     };
     connection.onerror = function (e) {
         alert('websocket Error:' + e);
     };
     connection.onclose = function (e) {
+        console.log(e);
         alert('websocket close code:' + e.code + ' reason:' + e.reason);
     }
     //websocket客户端的控制中心
@@ -185,7 +202,7 @@
         try {
             json = JSON.parse(e.data);
         } catch (error) {
-            console.log(error);
+//            console.log(error);
             return;
         }
         if (json.success) {
@@ -202,7 +219,7 @@
                     break;
                 case "game_go_on":
                     var chessman = JSON.parse(json.content);
-                    chessboardVue.setPiece(chessman.position.row, chessman.position.column, chessman.color);
+                    chessboard.setPiece(chessman.position.row, chessman.position.column, chessman.color);
                     break;
                 case "creator_win":
                     alert(json.content);
@@ -212,7 +229,7 @@
                     break;
             }
         }
-    };
+    }
     //websocket客户端的调用中心
     function sendMessage(data) {
         connection.send(data);
@@ -221,21 +238,6 @@
     //用户名作为全局变量,后边显示要用到
     var userName;
 
-    //强制用户起个名字过来
-    $('#modal-container-493620').modal({
-        keyboard: false
-    }).on('hide.bs.modal', function (e) {
-        userName = $("#userNameInput").text().trim();
-        if (!userName) {
-            e.preventDefault();
-            alert('名字不能为空');
-        }
-        //根据填的名称创建用户
-        var simpleProtocol = {};
-        simpleProtocol.action = "create_user";
-        simpleProtocol.content = userName;
-        connection.send(JSON.stringify(simpleProtocol));
-    });
 
     //    initGame();
 </script>

@@ -19,7 +19,7 @@ var gameListVue = new Vue({
             var simpleProtocol = {};
             simpleProtocol.action = "join_game";
             simpleProtocol.content = $index;
-            chessboardVue.changeColor();
+            chessboard.changeColor();
             sendMessage(JSON.stringify(simpleProtocol));
         },
         finishJoinGame: function () {
@@ -144,12 +144,17 @@ function Chessboard(gridSize, onPieceChecked) {
 
     /** 公有成员 **/
 
-    var stage = new createjs.Stage("chessboard");
+    var stage = new createjs.Stage("chessboardVue");
     stage.enableMouseOver();
 
     /** 公有方法 **/
 
     function setPiece(row, col, color) {
+        if (color == "0") {
+            color = "#000";
+        } else {
+            color = "#FFF";
+        }
         checkPiece(locationMap[row][col], color);
         stage.update();
     }
@@ -221,50 +226,54 @@ function Chessboard(gridSize, onPieceChecked) {
 
 var chessboard;
 
-var chessboardVue = new Vue({
-    el: '#chessboardVue',
 
-    methods: {
-        tryToSetPiece: function (row, col) {
-            var simpleProtocol = {};
-            simpleProtocol.action = "do_step";
-            var chessman = {};
-            chessman.position = {};
-            chessman.position.row = row / 50;
-            chessman.position.column = col / 50;
-            if (this.pieceColor == "#000") {
-                chessman.color = 0;
-            } else {
-                chessman.color = 1;
-            }
-            simpleProtocol.content = chessman;
-            sendMessage(JSON.stringify(simpleProtocol));
-        },
-        setPiece: function (row, col, color) {
-            chessboard.setPiece(row, col, color);
-        },
-        changeColor: function () {
-            chessboard.changeColor();
-        }
-
-
-    },
-    ready: function () {
-        chessboard = new Chessboard(50, function (row, col, color) {
-            var simpleProtocol = {};
-            simpleProtocol.action = "do_step";
-            var chessman = {};
-            chessman.position = {};
-            chessman.position.row = row / 50;
-            chessman.position.column = col / 50;
-            if (color == "#000") {
-                chessman.color = 0;
-            } else {
-                chessman.color = 1;
-            }
-            simpleProtocol.content = chessman;
-            sendMessage(JSON.stringify(simpleProtocol));
-        });
+chessboard = new Chessboard(50, function (row, col, color) {
+    var simpleProtocol = {};
+    simpleProtocol.action = "do_step";
+    var chessman = {};
+    chessman.position = {};
+    chessman.position.row = row;
+    chessman.position.column = col;
+    if (color == "#000") {
+        chessman.color = 0;
+    } else {
+        chessman.color = 1;
     }
-})
+    simpleProtocol.content = chessman;
+    sendMessage(JSON.stringify(simpleProtocol));
+});
 
+
+//
+// var chessboardVue = new Vue({
+//     el: '#chessboardVue',
+//
+//     methods: {
+//         tryToSetPiece: function (row, col) {
+//             var simpleProtocol = {};
+//             simpleProtocol.action = "do_step";
+//             var chessman = {};
+//             chessman.position = {};
+//             chessman.position.row = row / 50;
+//             chessman.position.column = col / 50;
+//             if (this.pieceColor == "#000") {
+//                 chessman.color = 0;
+//             } else {
+//                 chessman.color = 1;
+//             }
+//             simpleProtocol.content = chessman;
+//             sendMessage(JSON.stringify(simpleProtocol));
+//         },
+//         setPiece: function (row, col, color) {
+//             chessboard.setPiece(row, col, color);
+//         },
+//         changeColor: function () {
+//             chessboard.changeColor();
+//         }
+//
+//
+//     },
+//     ready: function () {
+//     }
+// })
+//
