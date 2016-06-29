@@ -104,7 +104,7 @@ var gamePlayRightVue = new Vue({
 // 棋盘类
 // 棋盘格子尺寸
 // 本方颜色
-function Chessboard(gridSize, selfColor) {
+function Chessboard(gridSize, selfColor, onPieceChecked) {
     /** 私有成员 **/
 
     var validateSize = 700;
@@ -146,17 +146,14 @@ function Chessboard(gridSize, selfColor) {
 
     /** 公有成员 **/
 
-    this.stage = new createjs.Stage("chessboard");
-    this.stage.enableMouseOver();
+    var stage = new createjs.Stage("chessboard");
+    stage.enableMouseOver();
 
     /** 公有方法 **/
 
-    this.setPiece = function(row, col, color) {
+    function setPiece(row, col, color) {
         checkPiece(locationMap[row][col], color);
-        this.stage.update();
-    };
-
-    this.onPieceChecked = function(row, col, color) {
+        stage.update();
     };
 
     // var backgroud = new createjs.Shape();
@@ -165,7 +162,7 @@ function Chessboard(gridSize, selfColor) {
     // backgroud.graphics
     //   .beginFill("BlanchedAlmond").drawRect(0, 0, boardSize, boardSize);
 
-    // this.stage.addChild(backgroud);
+    // stage.addChild(backgroud);
 
 
     for (var row = 0; row <= gridCount; ++row) {
@@ -186,31 +183,36 @@ function Chessboard(gridSize, selfColor) {
             piece.on("click", function (event) {
                 if (!event.target.isChecked) {
                     checkPiece(event.target, selfColor);
-                    this.onPieceChecked(event.target.row, event.target.col, selfColor);
-                    this.stage.update();
+                    onPieceChecked(event.target.row, event.target.col, selfColor);
+                    stage.update();
                 }
             });
 
             piece.on("mouseover", function (event) {
                 if (!event.target.isChecked) {
                     precheckPiece(event.target);
-                    this.stage.update();
+                    stage.update();
                 }
             });
             piece.on("mouseout", function (event) {
                 if (!event.target.isChecked) {
                     resetPiece(event.target);
-                    this.stage.update();
+                    stage.update();
                 }
             });
 
-            this.stage.addChild(piece);
+            stage.addChild(piece);
         }
     }
 
-    this.stage.x = 0;
-    this.stage.y = 0;
-    this.stage.update();
+    stage.x = 0;
+    stage.y = 0;
+    stage.update();
+
+
+    // 导出公有成员
+    this.setPiece = setPiece;
+    this.stage = stage;
 }
 
 var chessboard;
@@ -239,10 +241,9 @@ var chessboardVue = new Vue({
         }
     },
     ready: function () {
-        chessboard = new Chessboard(50, "#000");
-        chessboard.onPieceChecked = function(row, col, color) {
+        chessboard = new Chessboard(50, "#000", function(row, col, color) {
             // 通知服务端
-        };
+        });
     }
 })
 
