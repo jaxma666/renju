@@ -65,11 +65,9 @@ var gameHallControl = new Vue({
     methods: {
         //创建游戏
         startCreateGame: function () {
-            var self = this;
             var simpleProtocol = {};
             simpleProtocol.action = 'create_game';
             sendMessage(JSON.stringify(simpleProtocol));
-            // this.finishCreateGame();
         },
 
         finishCreateGame: function (index) {
@@ -104,7 +102,7 @@ var gamePlayRightVue = new Vue({
 // 棋盘类
 // 棋盘格子尺寸
 // 本方颜色
-function Chessboard(gridSize, selfColor, onPieceChecked) {
+function Chessboard(gridSize, onPieceChecked) {
     /** 私有成员 **/
 
     var validateSize = 700;
@@ -112,8 +110,8 @@ function Chessboard(gridSize, selfColor, onPieceChecked) {
     var boardSize = validateSize + gapSize * 2;
     var gridCount = validateSize / gridSize;
     var locationMap = new Array();
-
-
+    //创建者默认为黑棋
+    var selfColor = "#000";
 
     /** 私有方法 **/
 
@@ -154,7 +152,12 @@ function Chessboard(gridSize, selfColor, onPieceChecked) {
     function setPiece(row, col, color) {
         checkPiece(locationMap[row][col], color);
         stage.update();
-    };
+    }
+
+    //挑战者默认为白棋
+    function changeColor() {
+        selfColor = "#FFF";
+    }
 
     // var backgroud = new createjs.Shape();
     // backgroud.x = 0;
@@ -212,6 +215,7 @@ function Chessboard(gridSize, selfColor, onPieceChecked) {
 
     // 导出公有成员
     this.setPiece = setPiece;
+    this.changeColor = changeColor;
     this.stage = stage;
 }
 
@@ -238,11 +242,28 @@ var chessboardVue = new Vue({
         },
         setPiece: function (row, col, color) {
             chessboard.setPiece(row, col, color);
+        },
+        changeColor: function () {
+            chessboard.changeColor();
         }
+
+
     },
     ready: function () {
-        chessboard = new Chessboard(50, "#000", function(row, col, color) {
-            // 通知服务端
+        chessboard = new Chessboard(50, function (row, col, color) {
+            var simpleProtocol = {};
+            simpleProtocol.action = "do_step";
+            var chessman = {};
+            chessman.position = {};
+            chessman.position.row = row / 50;
+            chessman.position.column = col / 50;
+            if (color == "#000") {
+                chessman.color = 0;
+            } else {
+                chessman.color = 1;
+            }
+            simpleProtocol.content = chessman;
+            sendMessage(JSON.stringify(simpleProtocol));
         });
     }
 })
