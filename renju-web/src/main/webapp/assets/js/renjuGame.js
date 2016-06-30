@@ -11,7 +11,7 @@ var gameListVue = new Vue({
                 // console.log(data)
                 if (data.success) {
                     self.items = data.result;
-                    setTimeout(self.updateGameList, 5000);
+                    setTimeout(self.updateGameList, 2000);
                 }
             });
         },
@@ -47,7 +47,7 @@ var playerListVue = new Vue({
                 if (data.success) {
 
                     self.items = data.result;
-                    setTimeout(self.updatePlayerList, 5000);
+                    setTimeout(self.updatePlayerList, 2000);
                 }
             });
         }
@@ -190,7 +190,7 @@ function Chessboard(gridSize, onPieceChecked) {
 
             piece.on("click", function (event) {
                 if (!event.target.isChecked) {
-                    checkPiece(event.target, selfColor);
+                    // checkPiece(event.target, selfColor);
                     onPieceChecked(event.target.row, event.target.col, selfColor);
                     stage.update();
                 }

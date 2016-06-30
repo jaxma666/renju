@@ -48,7 +48,7 @@ public class DoStepMessageHandler implements IMessageHandler {
             result = renjuCenter.doStep(renjuGame, chessman);
             renjuGame.blacksTurn = true;
         } else {
-            simpleProtocol.returnError("turn_error", "还未轮到你喔");
+            simpleProtocol.returnSuccess("turn_error", "还未轮到你喔");
             pushCenter.pushMessage(simpleProtocol, session);
             return;
         }
