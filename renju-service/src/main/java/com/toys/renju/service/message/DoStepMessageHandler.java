@@ -36,7 +36,11 @@ public class DoStepMessageHandler implements IMessageHandler {
             return;
         }
         RenjuGame renjuGame = (RenjuGame) session.getAttributes().get(session.getId());
-
+        if (renjuGame.gameState.intValue() == 0) {
+            simpleProtocol.returnSuccess("turn_error", "游戏尚未开始,请稍等");
+            pushCenter.pushMessage(simpleProtocol, session);
+            return;
+        }
         String result;
         if (renjuGame.blacksTurn && renjuGame.getParticipants().getCreator().getId().equals(session.getId())) {
             //do biz
@@ -52,17 +56,10 @@ public class DoStepMessageHandler implements IMessageHandler {
             pushCenter.pushMessage(simpleProtocol, session);
             return;
         }
-        switch (result) {
-            case "game_go_on":
-                simpleProtocol.returnSuccess(result, JSON.toJSONString(chessman));
-                break;
-            case "creator_win":
-                simpleProtocol.returnSuccess(result, "黑方胜!");
-                break;
-            default:
-                simpleProtocol.returnSuccess(result, "白方胜!");
-                break;
-        }
+        simpleProtocol.returnSuccess(result, JSON.toJSONString(chessman));
         pushCenter.pushToAllParticipants(simpleProtocol, renjuGame.getParticipants());
+        if (!result.equals("game_go_on")) {
+            renjuCenter.endGame(session.getId());
+        }
     }
 }

@@ -74,7 +74,9 @@ public class RenjuHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        userSessionCenter.offLine(session);
+        IMessageHandler messageHandler = messageHandlerFactory.getMessageHandler("left_game");
+        messageHandler.handle(session, "");
         renjuCenter.leftGame(session);
+        userSessionCenter.offLine(session);
     }
 }

@@ -71,5 +71,10 @@ public class RenjuCenterImpl implements IRenjuCenter {
     public String doStep(RenjuGame renjuGame, Chessman chessman) {
         return renjuGame.checkAllDirection(chessman);
     }
+
+    @Override
+    public void endGame(String index) {
+        renjuGameList.remove(Integer.parseInt(index));
+    }
 }
 

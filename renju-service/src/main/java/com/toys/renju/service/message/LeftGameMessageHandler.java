@@ -21,7 +21,6 @@ public class LeftGameMessageHandler implements IMessageHandler {
     IRenjuCenter renjuCenter;
     @Resource
     IPushCenter pushCenter;
-
     @Resource
     IUserSessionCenter userSessionCenter;
 

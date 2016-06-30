@@ -168,7 +168,7 @@
 <script>
 
     //进入游戏大厅,直接创建websocket连接
-    var connection = new WebSocket("ws://30.9.116.39:8080/renju");
+    var connection = new WebSocket("ws://localhost:8080/renju");
     connection.onopen = function () {
         console.log("websocket链接已打开...");
 
@@ -213,6 +213,7 @@
                     break;
                 case "join_game_success":
                     gameHallControl.finishCreateGame(json.content);
+                    alert("游戏开始,请创建者执黑先行");
                     break;
                 case "turn_error":
                     alert(json.content);
@@ -222,11 +223,18 @@
                     chessboard.setPiece(chessman.position.row, chessman.position.column, chessman.color);
                     break;
                 case "creator_win":
+                    var chessman = JSON.parse(json.content);
                     chessboard.setPiece(chessman.position.row, chessman.position.column, chessman.color);
-                    alert(json.content);
+                    alert("黑方胜!");
+                    gameHallControl.gameEndGoToHall();
                     break;
                 case "joiner_win":
+                    var chessman = JSON.parse(json.content);
                     chessboard.setPiece(chessman.position.row, chessman.position.column, chessman.color);
+                    alert("白方胜!");
+                    gameHallControl.gameEndGoToHall();
+                    break;
+                case "one_player_left":
                     alert(json.content);
                     break;
             }

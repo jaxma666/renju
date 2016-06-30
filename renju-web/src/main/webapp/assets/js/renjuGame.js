@@ -74,6 +74,11 @@ var gameHallControl = new Vue({
             $("#gameListArea").hide();
             $("#gamePlayArea").show();
             gamePlayRightVue.updategamePlayRight(index);
+        },
+
+        gameEndGoToHall: function () {
+            $("#gamePlayArea").hide();
+            $("#gameListArea").show();
         }
     }
 })

@@ -12,18 +12,19 @@ import java.util.List;
  */
 public interface IRenjuCenter {
     //全局的棋局信息
-    public List<RenjuGame> getGameList();
+    List<RenjuGame> getGameList();
 
     //创建一局棋,并把session关联到棋局id
-    public Integer createGame(WebSocketSession creator);
+    Integer createGame(WebSocketSession creator);
 
     //加入一个棋局,把session关联到棋局id
-    public Boolean joinGame(WebSocketSession joiner, RenjuGame renjuGame);
+    Boolean joinGame(WebSocketSession joiner, RenjuGame renjuGame);
 
-    public Boolean watchGame(WebSocketSession visitor, RenjuGame renjuGame);
+    Boolean watchGame(WebSocketSession visitor, RenjuGame renjuGame);
 
-    public void leftGame(WebSocketSession oneUser);
+    void leftGame(WebSocketSession oneUser);
 
-    public String doStep(RenjuGame renjuGame, Chessman chessman);
+    String doStep(RenjuGame renjuGame, Chessman chessman);
 
+    void endGame(String index);
 }
