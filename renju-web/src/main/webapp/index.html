@@ -168,7 +168,7 @@
 <script>
 
     //进入游戏大厅,直接创建websocket连接
-    var connection = new WebSocket("ws://localhost:8080/renju");
+    var connection = new WebSocket("ws://192.168.0.133:8080/renju");
     connection.onopen = function () {
         console.log("websocket链接已打开...");
 
@@ -236,6 +236,7 @@
                     break;
                 case "one_player_left":
                     alert(json.content);
+                    gameHallControl.gameEndGoToHall();
                     break;
             }
         }
