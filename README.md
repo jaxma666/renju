@@ -7,3 +7,6 @@
 3. 实现了游戏大厅、用户管 理、游戏管理、游戏业务。
 
 
+![](http://raw.githubusercontent.com/majiaji/renju/master/screenshots/1.png)
+
+![](http://raw.githubusercontent.com/majiaji/renju/master/screenshots/2.png)
