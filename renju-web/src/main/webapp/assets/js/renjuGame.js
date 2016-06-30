@@ -19,7 +19,7 @@ var gameListVue = new Vue({
             var simpleProtocol = {};
             simpleProtocol.action = "join_game";
             simpleProtocol.content = $index;
-            chessboardVue.changeColor();
+            chessboard.changeColor();
             sendMessage(JSON.stringify(simpleProtocol));
         },
         finishJoinGame: function () {
@@ -65,11 +65,9 @@ var gameHallControl = new Vue({
     methods: {
         //创建游戏
         startCreateGame: function () {
-            var self = this;
             var simpleProtocol = {};
             simpleProtocol.action = 'create_game';
             sendMessage(JSON.stringify(simpleProtocol));
-            // this.finishCreateGame();
         },
 
         finishCreateGame: function (index) {
@@ -104,7 +102,7 @@ var gamePlayRightVue = new Vue({
 // 棋盘类
 // 棋盘格子尺寸
 // 本方颜色
-function Chessboard(gridSize, selfColor, onPieceChecked) {
+function Chessboard(gridSize, onPieceChecked) {
     /** 私有成员 **/
 
     var validateSize = 700;
@@ -112,8 +110,8 @@ function Chessboard(gridSize, selfColor, onPieceChecked) {
     var boardSize = validateSize + gapSize * 2;
     var gridCount = validateSize / gridSize;
     var locationMap = new Array();
-
-
+    //创建者默认为黑棋
+    var selfColor = "#000";
 
     /** 私有方法 **/
 
@@ -146,15 +144,25 @@ function Chessboard(gridSize, selfColor, onPieceChecked) {
 
     /** 公有成员 **/
 
-    var stage = new createjs.Stage("chessboard");
+    var stage = new createjs.Stage("chessboardVue");
     stage.enableMouseOver();
 
     /** 公有方法 **/
 
     function setPiece(row, col, color) {
+        if (color == "0") {
+            color = "#000";
+        } else {
+            color = "#FFF";
+        }
         checkPiece(locationMap[row][col], color);
         stage.update();
-    };
+    }
+
+    //挑战者默认为白棋
+    function changeColor() {
+        selfColor = "#FFF";
+    }
 
     // var backgroud = new createjs.Shape();
     // backgroud.x = 0;
@@ -212,38 +220,60 @@ function Chessboard(gridSize, selfColor, onPieceChecked) {
 
     // 导出公有成员
     this.setPiece = setPiece;
+    this.changeColor = changeColor;
     this.stage = stage;
 }
 
 var chessboard;
 
-var chessboardVue = new Vue({
-    el: '#chessboardVue',
 
-    methods: {
-        tryToSetPiece: function (row, col) {
-            var simpleProtocol = {};
-            simpleProtocol.action = "do_step";
-            var chessman = {};
-            chessman.position = {};
-            chessman.position.row = row / 50;
-            chessman.position.column = col / 50;
-            if (this.pieceColor == "#000") {
-                chessman.color = 0;
-            } else {
-                chessman.color = 1;
-            }
-            simpleProtocol.content = chessman;
-            sendMessage(JSON.stringify(simpleProtocol));
-        },
-        setPiece: function (row, col, color) {
-            chessboard.setPiece(row, col, color);
-        }
-    },
-    ready: function () {
-        chessboard = new Chessboard(50, "#000", function(row, col, color) {
-            // 通知服务端
-        });
+chessboard = new Chessboard(50, function (row, col, color) {
+    var simpleProtocol = {};
+    simpleProtocol.action = "do_step";
+    var chessman = {};
+    chessman.position = {};
+    chessman.position.row = row;
+    chessman.position.column = col;
+    if (color == "#000") {
+        chessman.color = 0;
+    } else {
+        chessman.color = 1;
     }
-})
+    simpleProtocol.content = chessman;
+    sendMessage(JSON.stringify(simpleProtocol));
+});
 
+
+//
+// var chessboardVue = new Vue({
+//     el: '#chessboardVue',
+//
+//     methods: {
+//         tryToSetPiece: function (row, col) {
+//             var simpleProtocol = {};
+//             simpleProtocol.action = "do_step";
+//             var chessman = {};
+//             chessman.position = {};
+//             chessman.position.row = row / 50;
+//             chessman.position.column = col / 50;
+//             if (this.pieceColor == "#000") {
+//                 chessman.color = 0;
+//             } else {
+//                 chessman.color = 1;
+//             }
+//             simpleProtocol.content = chessman;
+//             sendMessage(JSON.stringify(simpleProtocol));
+//         },
+//         setPiece: function (row, col, color) {
+//             chessboard.setPiece(row, col, color);
+//         },
+//         changeColor: function () {
+//             chessboard.changeColor();
+//         }
+//
+//
+//     },
+//     ready: function () {
+//     }
+// })
+//
